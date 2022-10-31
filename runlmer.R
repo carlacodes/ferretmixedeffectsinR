@@ -93,7 +93,7 @@ tinapred=predict(modelreg_reduc7, tinadata, type='response')
 macpred=predict(modelreg_reduc7, macdata, type='response')
 
 
-plot(as.numeric(unlist(oneferret['realRelReleaseTimes'])), cruellapred, main="Scatterplot Example",
+plot(as.numeric(unlist(oneferret['realRelReleaseTimes'])), cruellapred, main="Cruella actual versus predicted",
      xlab="actual ", ylab="predicted ", pch=19)
 abline(a=0, b=1)
 
