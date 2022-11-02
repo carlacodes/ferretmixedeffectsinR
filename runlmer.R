@@ -1,5 +1,3 @@
-## load lme4, JWileymisc, and multilevelTools packages
-## (i.e., "open the 'apps' ") 
 library(lme4)
 library(lmerTest)
 library(performance)
@@ -26,13 +24,15 @@ df$ferret=factor(df$ferret)
 
 
 nullmodel1 <- lmer( realRelReleaseTimes ~ 1 + (1|ferret), data = df, REML=FALSE)
-nullmodel2 <- lmer( realRelReleaseTimes ~ 1 + (1 + AM |ferret), data = df, REML=FALSE)
-nullmodel3 <- lmer( realRelReleaseTimes ~ 1 +(1 +talker |ferret), data = df, REML=FALSE)
+nullmodel2 <- lmer( realRelReleaseTimes ~ 1 + (1 + pastcorrectresp |ferret), data = df, REML=FALSE)
+nullmodel22 <- lmer( realRelReleaseTimes ~ 1 + (1 + pastcorrectresp |ferret)+(1 + trialNum |ferret), data = df, REML=FALSE)
 
-nullmodel4 <- lmer( realRelReleaseTimes ~ 1 +(0 +talker |ferret), data = df, REML=FALSE)
+nullmodel3 <- lmer( realRelReleaseTimes ~ 1 +(1 +pastcorrectresp+pastcatchtrial |ferret), data = df, REML=FALSE)
 
-nullmodel5 <- lmer( realRelReleaseTimes ~ 1 + (0 +side |ferret)+(0 +talker |ferret), data = df, REML=FALSE)
-nullmodel6 <- lmer( realRelReleaseTimes ~ 1 + (1 +side |ferret)+(1 +talker |ferret), data = df, REML=FALSE)
+nullmodel4 <- lmer( realRelReleaseTimes ~ 1 +(0 +pastcorrectresp |ferret), data = df, REML=FALSE)
+
+nullmodel5 <- lmer( realRelReleaseTimes ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret), data = df, REML=FALSE)
+nullmodel6 <- lmer( realRelReleaseTimes ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret)+(0 +pastcatchtrial |ferret), data = df, REML=FALSE)
 
 nullmodel7 <- lmer( realRelReleaseTimes ~ 1 + (1 + talker+timeToTarget*side |ferret), data = df, REML=FALSE)
 nullmodel8 <- lmer( realRelReleaseTimes ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +AM |ferret), data = df, REML=FALSE)
@@ -44,42 +44,43 @@ anova (nullmodel1, nullmodel2, nullmodel3, nullmodel4, nullmodel5, nullmodel6, n
 
 
 modelreg_reduc1 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+(0 +side |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
   data=df, REML = FALSE, )#control = lmerControl(optimizer ="Nelder_Mead")
 
 modelreg_reduc2 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+stepval+(0 +side |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
   data=df, REML = FALSE,)
 
 modelreg_reduc3 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+stepval+talker+(0 +side |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg+stepval+talker+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
   data=df, REML = FALSE,)
 
 modelreg_reduc4 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+(0 +side |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
   data=df, REML = FALSE, )
 
 modelreg_reduc5 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+timeToTarget+(0 +side |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
   data=df, REML = FALSE)
 
 modelreg_reduc6 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+timeToTarget+AM+(0 +side |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+timeToTarget+AM+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
   data=df, REML = FALSE)
 # talker*(pitchoftarg)+side + talker*stepval+timeToTarget
 modelreg_reduc7 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg*stepval+talker*pitchoftarg+side+timeToTarget+(0 +side |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg*stepval+talker*pitchoftarg+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
   data=df, REML = FALSE)
 
 modelreg_reduc8 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg*stepval(0 +side |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg*stepval+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
   data=df, REML = FALSE)
 modelreg_reduc9 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg*stepval*talker+(0 +side |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg*stepval*talker+trialNum+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
   data=df, REML = FALSE)
 
 
 anova(modelreg_reduc1, modelreg_reduc2, modelreg_reduc3, modelreg_reduc4, modelreg_reduc5, modelreg_reduc6, modelreg_reduc7, modelreg_reduc8, modelreg_reduc9)
+coeff=r2(modelreg_reduc5)
 
 oneferret=subset(df, ferret == 1)
 zoladata=subset(df, ferret==0)
@@ -93,19 +94,21 @@ tinapred=predict(modelreg_reduc7, tinadata, type='response')
 macpred=predict(modelreg_reduc7, macdata, type='response')
 
 
-plot(as.numeric(unlist(oneferret['realRelReleaseTimes'])), cruellapred, main="Cruella actual versus predicted",
+plot(as.numeric(unlist(oneferret['realRelReleaseTimes'])), cruellapred, main="Cruella actual vs. predicted lick release times",
      xlab="actual ", ylab="predicted ", pch=19)
 abline(a=0, b=1)
 
-plot(as.numeric(unlist(zoladata['realRelReleaseTimes'])), zolapred, main="Zola actual v predicted",
+plot(as.numeric(unlist(zoladata['realRelReleaseTimes'])), zolapred, main="Zola actual vs. predicted lick release times",
      xlab="actual ", ylab="predicted ", pch=19)
 abline(a=0, b=1)
 
-plot(as.numeric(unlist(tinadata['realRelReleaseTimes'])), tinapred, main="Tina actual v predicted",
+plot(as.numeric(unlist(tinadata['realRelReleaseTimes'])), tinapred, main="Tina actual vs. predicted lick release times",
      xlab="actual ", ylab="predicted ", pch=19)
 abline(a=0, b=1)
 
-plot(as.numeric(unlist(macdata['realRelReleaseTimes'])), macpred, main="Mac actual v predicted",
+plot(as.numeric(unlist(macdata['realRelReleaseTimes'])), macpred, main="Mac actual vs. predicted lick release times",
      xlab="actual ", ylab="predicted ", pch=19)
 abline(a=0, b=1)
+
+
 
