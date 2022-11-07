@@ -176,8 +176,7 @@ for (i in 0:3) {
 
 
 
-
-
+##now run both lasso for the whole dataset of animals 
   df_animal <- dfuse
   X = subset(df_animal, select = -c(realRelReleaseTimes) )
   X = subset(X, select = -c(X) )
