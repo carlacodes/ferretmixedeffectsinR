@@ -115,7 +115,7 @@ for (i in 0:3) {
   
   #preddata=predict(modelreg_reduc1, data.matrix(X), type='response')
   datamat = data.matrix(X)
-  predictions_train <- predict(modelreg_reduc1, newx = data.matrix(X))
+  predictions_train <- predict(modelreg_reduc1, s=lambda,  newx = data.matrix(X))
   eval_results(df_animal$realRelReleaseTimes, predictions_train, df_animal)
   
   
@@ -144,7 +144,7 @@ for (i in 0:3) {
   mod_cv <- cv.glmnet(data.matrix(X), y=as.factor(df_animal$correctresp), family = 'binomial', intercept = F, alpha=1)
   lambda <- mod_cv$lambda.1se
   
-  modelreg_reduc1<- glmnet(X, as.factor(df_animal$correctresp),family = 'binomial', lambda=lambda, intercept = F, alpha = 1)
+  modelreg_reduc1<- glmnet(X, as.factor(df_animal$correctresp),type.measure="deviance", family = 'binomial', lambda=lambda, intercept = F, alpha = 1)
   
   
   storemod_correctresp[i+1] =  coef(modelreg_reduc1)
@@ -177,92 +177,132 @@ for (i in 0:3) {
 
 
 ##now run both lasso for the whole dataset of animals 
-  df_animal <- dfuse
-  X = subset(df_animal, select = -c(realRelReleaseTimes) )
-  X = subset(X, select = -c(X) )
-  X = subset(X, select = -c(ferret) )
-  
-  
-  
-  
-  #X=model.matrix(X)
-  #df_animal <- df_animal[c( "realRelReleaseTimes", "pitchoftarg","talker","stepval", "side", "timeToTarget", "trialNum", "pastcorrectresp", "pastcatchtrial")]
-  
-  ##pitch of targ is highly correlated with talker identity
-  #modelreg_reduc5<- glm(realRelReleaseTimes ~  pitchoftarg*talker*stepval*side*timeToTarget*trialNum*pastcorrectresp*pastcatchtrial*AM*DaysSinceStart, data=df_animal, family = 'gaussian')
-  
-  
-  mod_cv <- cv.glmnet(data.matrix(X), y=df_animal$realRelReleaseTimes, family = 'gaussian', intercept = F, alpha=1)
-  lambda <- mod_cv$lambda.1se
-  
-  modelreg_reduc1<- glmnet(X, df_animal$realRelReleaseTimes,family = 'gaussian', lambda=lambda, intercept = F, alpha = 1)
-  
-  
-  storemodall =coef(modelreg_reduc1)
-  storecvall = mod_cv
-  r2coeffall =(modelreg_reduc1$dev.ratio) #dev ratio represents the pseudo r^2
-  #r2 <- fit$glmnet.fit$dev.ratio[which(modelreg_reduc1$glmnet.fit$lambda == modelreg_reduc1$lambda.1se)] 
-  plot(mod_cv) 
-  coef(mod_cv, c(mod_cv$lambda.min,
-                 mod_cv$lambda.1se))
-  
-  coef(mod_cv, c(mod_cv$lambda.min))
-  print(paste(mod_cv$lambda.min,
-              log(mod_cv$lambda.min)))
-  print(paste(mod_cv$lambda.1se,
-              log(mod_cv$lambda.1se)))
-  
-  #preddata=predict(modelreg_reduc1, data.matrix(X), type='response')
-  datamat = data.matrix(X)
-  predictions_train <- predict(modelreg_reduc1, newx = data.matrix(X))
-  eval_results(df_animal$realRelReleaseTimes, predictions_train, df_animal)
-  
-  
-  plot(df_animal$realRelReleaseTimes, predictions_train, main="actual vs. predicted correct relative release times",
-       xlab="actual ", ylab="predicted ", pch=19)
-  abline(a=0, b=1)
-  
+df_animal <- dfuse
+X = subset(df_animal, select = -c(realRelReleaseTimes))
+X = subset(X, select = -c(X))
+X = subset(X, select = -c(ferret))
 
-  df_animal <- dfcatuse
-  X = subset(df_animal, select = -c(correctresp) )
-  X = subset(X, select = -c(X) )
-  X = subset(X, select = -c(ferret) )
-  
-  
-  #X=model.matrix(X)
-  #df_animal <- df_animal[c( "realRelReleaseTimes", "pitchoftarg","talker","stepval", "side", "timeToTarget", "trialNum", "pastcorrectresp", "pastcatchtrial")]
-  
-  ##pitch of targ is highly correlated with talker identity
-  #modelreg_reduc5<- glm(realRelReleaseTimes ~  pitchoftarg*talker*stepval*side*timeToTarget*trialNum*pastcorrectresp*pastcatchtrial*AM*DaysSinceStart, data=df_animal, family = 'gaussian')
-  
-  
-  mod_cv <- cv.glmnet(data.matrix(X), y=as.factor(df_animal$correctresp), family = 'binomial', intercept = F, alpha=1)
-  lambda <- mod_cv$lambda.1se
-  
-  modelreg_reduc1<- glmnet(X, as.factor(df_animal$correctresp),family = 'binomial', lambda=lambda, intercept = F, alpha = 1)
-  
-  
-  storemod_correctrespall =  coef(modelreg_reduc1)
-  storecv_correctrespall = mod_cv
-  i<-which(mod_cv$lambda == mod_cv$lambda.1se)
-  e<-mod_cv$cvm[i]
-  r2<-1-e/var((df_animal$correctresp))
-  r2coeff_correctrespall =modelreg_reduc1$dev.ratio #dev ratio represents the pseudo r^2
-  plot(mod_cv) 
-  coef(mod_cv, c(mod_cv$lambda.min,
-                 mod_cv$lambda.1se))
-  
-  coef(mod_cv, c(mod_cv$lambda.min))
-  print(paste(mod_cv$lambda.min,
-              log(mod_cv$lambda.min)))
-  print(paste(mod_cv$lambda.1se,
-              log(mod_cv$lambda.1se)))
-  
-  preddata=predict(modelreg_reduc1, data.matrix(X))
-  
-  
-  plot(as.numeric(unlist(df_animal['correctresp'])), preddata, main="actual vs. predicted correct response",
-       xlab="actual ", ylab="predicted ", pch=19)
-  
-  
 
+
+
+#X=model.matrix(X)
+#df_animal <- df_animal[c( "realRelReleaseTimes", "pitchoftarg","talker","stepval", "side", "timeToTarget", "trialNum", "pastcorrectresp", "pastcatchtrial")]
+
+##pitch of targ is highly correlated with talker identity
+#modelreg_reduc5<- glm(realRelReleaseTimes ~  pitchoftarg*talker*stepval*side*timeToTarget*trialNum*pastcorrectresp*pastcatchtrial*AM*DaysSinceStart, data=df_animal, family = 'gaussian')
+
+
+mod_cv <-
+  cv.glmnet(
+    data.matrix(X),
+    y = df_animal$realRelReleaseTimes,
+    family = 'gaussian',
+    intercept = F,
+    alpha = 1
+  )
+lambda <- mod_cv$lambda.1se
+
+modelreg_reduc1 <-
+  glmnet(
+    X,
+    df_animal$realRelReleaseTimes,
+    family = 'gaussian',
+    lambda = lambda,
+    intercept = F,
+    alpha = 1
+  )
+
+
+storemodall = coef(modelreg_reduc1)
+storecvall = mod_cv
+r2coeffall = (modelreg_reduc1$dev.ratio) #dev ratio represents the pseudo r^2
+#r2 <- fit$glmnet.fit$dev.ratio[which(modelreg_reduc1$glmnet.fit$lambda == modelreg_reduc1$lambda.1se)]
+plot(mod_cv)
+coef(mod_cv, c(mod_cv$lambda.min,
+               mod_cv$lambda.1se))
+
+coef(mod_cv, c(mod_cv$lambda.min))
+print(paste(mod_cv$lambda.min,
+            log(mod_cv$lambda.min)))
+print(paste(mod_cv$lambda.1se,
+            log(mod_cv$lambda.1se)))
+
+#preddata=predict(modelreg_reduc1, data.matrix(X), type='response')
+datamat = data.matrix(X)
+predictions_train <-
+  predict(modelreg_reduc1, newx = data.matrix(X))
+eval_results(df_animal$realRelReleaseTimes, predictions_train, df_animal)
+
+
+plot(
+  df_animal$realRelReleaseTimes,
+  predictions_train,
+  main = "actual vs. predicted correct relative release times",
+  xlab = "actual ",
+  ylab = "predicted ",
+  pch = 19
+)
+abline(a = 0, b = 1)
+
+
+df_animal <- dfcatuse
+X = subset(df_animal, select = -c(correctresp))
+X = subset(X, select = -c(X))
+X = subset(X, select = -c(ferret))
+
+
+#X=model.matrix(X)
+#df_animal <- df_animal[c( "realRelReleaseTimes", "pitchoftarg","talker","stepval", "side", "timeToTarget", "trialNum", "pastcorrectresp", "pastcatchtrial")]
+
+##pitch of targ is highly correlated with talker identity
+#modelreg_reduc5<- glm(realRelReleaseTimes ~  pitchoftarg*talker*stepval*side*timeToTarget*trialNum*pastcorrectresp*pastcatchtrial*AM*DaysSinceStart, data=df_animal, family = 'gaussian')
+
+
+mod_cv <-
+  cv.glmnet(
+    data.matrix(X),
+    y = as.factor(df_animal$correctresp),
+    family = 'binomial',
+    intercept = F,
+    alpha = 1
+  )
+lambda <- mod_cv$lambda.1se
+
+modelreg_reduc1 <-
+  glmnet(
+    X,
+    as.factor(df_animal$correctresp),
+    family = 'binomial',
+    lambda = lambda,
+    intercept = F,
+    alpha = 1
+  )
+
+
+storemod_correctrespall =  coef(modelreg_reduc1)
+storecv_correctrespall = mod_cv
+i <- which(mod_cv$lambda == mod_cv$lambda.1se)
+e <- mod_cv$cvm[i]
+r2 <- 1 - e / var((df_animal$correctresp))
+r2coeff_correctrespall = modelreg_reduc1$dev.ratio #dev ratio represents the pseudo r^2
+plot(mod_cv)
+coef(mod_cv, c(mod_cv$lambda.min,
+               mod_cv$lambda.1se))
+
+coef(mod_cv, c(mod_cv$lambda.min))
+print(paste(mod_cv$lambda.min,
+            log(mod_cv$lambda.min)))
+print(paste(mod_cv$lambda.1se,
+            log(mod_cv$lambda.1se)))
+
+preddata = predict(modelreg_reduc1, data.matrix(X))
+
+
+plot(
+  as.numeric(unlist(df_animal['correctresp'])),
+  preddata,
+  main = "actual vs. predicted correct response",
+  xlab = "actual ",
+  ylab = "predicted ",
+  pch = 19
+)
