@@ -9,8 +9,15 @@ library(extraoperators)
 library(JWileymisc)
 library(multilevelTools)
 
+library(sjPlot)
+library(sjlabelled)
+library(sjmisc)
+library(ggplot2)
+
+
 dfuse <- read.csv("dfuse.csv") 
 dfcatuse <- read.csv("dfcat_use.csv")
+dfcattest <- read.csv('mergedtrainedandnaive.csv')
 
 df <- read.csv("df.csv")
 dfcat <- read.csv("dfcat.csv")
@@ -117,5 +124,5 @@ plot(as.numeric(unlist(macdata['realRelReleaseTimes'])), macpred, main="Mac actu
 abline(a=0, b=1)
 max(df$pastcatchtrial)
 
-
+plot_model(modelreg_reduc55)
 
