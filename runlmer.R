@@ -43,7 +43,7 @@ nullmodel4 <- lmer( realRelReleaseTimes ~ 1 +(0 +pastcorrectresp |ferret), data 
 nullmodel5 <- lmer( realRelReleaseTimes ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret), data = df, REML=FALSE)
 nullmodel6 <- lmer( realRelReleaseTimes ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret)+(0 +trialNum |ferret), data = df, REML=FALSE)
 
-nullmodel7 <- lmer( realRelReleaseTimes ~ 1 + (1 + talker+timeToTarget*side |ferret), data = df, REML=FALSE)
+nullmodel7 <- lmer( realRelReleaseTimes ~ 1 + (talker+timeToTarget+side |ferret), data = df, REML=FALSE)
 nullmodel8 <- lmer( realRelReleaseTimes ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +AM |ferret), data = df, REML=FALSE)
 
 anova (nullmodel1, nullmodel2, nullmodel3, nullmodel4, nullmodel5, nullmodel6, nullmodel7, nullmodel8, nullmodel22)
@@ -51,44 +51,44 @@ anova (nullmodel1, nullmodel2, nullmodel3, nullmodel4, nullmodel5, nullmodel6, n
 
 
 
-
+#now adding fixed effects 
 modelreg_reduc1 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
   data=df, REML = FALSE, )#control = lmerControl(optimizer ="Nelder_Mead")
 
 modelreg_reduc2 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
   data=df, REML = FALSE,)
 
 modelreg_reduc3 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+stepval+talker+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg+stepval+talker+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
   data=df, REML = FALSE,)
 
 modelreg_reduc4 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
   data=df, REML = FALSE, )
 
 modelreg_reduc5 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
   data=df, REML = FALSE)
 
 modelreg_reduc55 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg*stepval+talker*stepval+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg*stepval+talker*stepval+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
   data=df, REML = TRUE)
 
 modelreg_reduc6 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+timeToTarget+AM+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+timeToTarget+AM+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
   data=df, REML = FALSE)
 # talker*(pitchoftarg)+side + talker*stepval+timeToTarget
 modelreg_reduc7 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg*stepval+talker*pitchoftarg+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg*stepval+talker*pitchoftarg+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
   data=df, REML = FALSE)
 
 modelreg_reduc8 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg*stepval+trialNum+pastcorrectresp+pastcatchtrial+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg*stepval+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
   data=df, REML = FALSE)
 modelreg_reduc9 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg*stepval*talker+trialNum+(0 +pastcorrectresp |ferret)+(0 +talker |ferret),
+  realRelReleaseTimes ~ pitchoftarg*stepval*talker+trialNum+(talker+timeToTarget+side |ferret),
   data=df, REML = FALSE)
 
 
