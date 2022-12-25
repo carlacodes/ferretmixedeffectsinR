@@ -93,7 +93,10 @@ modelreg_reduc9 <- lmer(
 
 
 anova(modelreg_reduc1, modelreg_reduc2, modelreg_reduc3, modelreg_reduc4, modelreg_reduc5, modelreg_reduc55,modelreg_reduc6, modelreg_reduc7, modelreg_reduc8, modelreg_reduc9)
-coeff=r2(modelreg_reduc55)
+coeff=r2(modelreg_reduc6)
+#declare chosen model HERE:
+chosen_model <- modelreg_reduc6
+
 
 oneferret=subset(df, ferret == 1)
 zoladata=subset(df, ferret==0)
@@ -101,10 +104,10 @@ tinadata=subset(df, ferret==2)
 macdata=subset(df, ferret==3)
 cruellact=oneferret['realRelReleaseTimes']
 
-cruellapred=predict(modelreg_reduc55, oneferret, type='response')
-zolapred=predict(modelreg_reduc55, zoladata, type='response')
-tinapred=predict(modelreg_reduc55, tinadata, type='response')
-macpred=predict(modelreg_reduc55, macdata, type='response')
+cruellapred=predict(chosen_model, oneferret, type='response')
+zolapred=predict(chosen_model, zoladata, type='response')
+tinapred=predict(chosen_model, tinadata, type='response')
+macpred=predict(chosen_model, macdata, type='response')
 
 
 plot(as.numeric(unlist(oneferret['realRelReleaseTimes'])), cruellapred, main="Cruella actual vs. predicted lick release times",
@@ -123,6 +126,11 @@ plot(as.numeric(unlist(macdata['realRelReleaseTimes'])), macpred, main="Mac actu
      xlab="actual ", ylab="predicted ", pch=19)
 abline(a=0, b=1)
 max(df$pastcatchtrial)
-
-plot_model(modelreg_reduc55)
+set_theme(base = theme_classic(), #To remove the background color and the grids
+          theme.font = 'serif',   #To change the font type
+          title.size=2,
+          axis.title.size = 1.5,  #To change axis title size
+          axis.textsize.x = 1.2,  #To change x axis text size
+          axis.textsize.y = 1.2)  #To change y axis text size
+plot_model(chosen_model, title = 'Ranked features of the reaction time model of the subset of the correct responses')
 
