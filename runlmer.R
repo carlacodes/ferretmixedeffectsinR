@@ -29,70 +29,78 @@ df$AM=factor(df$AM)
 df$ferret=factor(df$ferret)
 df$pastcatchtrial=factor(df$pastcatchtrial)
 df$pastcorrectresp = factor(df$pastcorrectresp)
+df$precur_and_targ_same = factor(df$precur_and_targ_same)
 
 ##fit individual model to each animal
 #look at reaction time mixed effects model in humans or any other types of studies 
-nullmodel1 <- lmer( realRelReleaseTimes ~ 1 + (1|ferret), data = df, REML=FALSE)
-nullmodel2 <- lmer( realRelReleaseTimes ~ 1 + (1 + pastcorrectresp |ferret), data = df, REML=FALSE)
-nullmodel22 <- lmer( realRelReleaseTimes ~ 1 + (1 + pastcorrectresp |ferret)+(1 + trialNum |ferret), data = df, REML=FALSE)
+nullmodel1 <- lmer( correctresp ~ 1 + (1|ferret), data = df, REML=FALSE)
+nullmodel2 <- lmer( correctresp ~ 1 + (1 + pastcorrectresp |ferret), data = df, REML=FALSE)
+nullmodel22 <- lmer( correctresp ~ 1 + (1 + pastcorrectresp |ferret)+(1 + trialNum |ferret), data = df, REML=FALSE)
 
-nullmodel3 <- lmer( realRelReleaseTimes ~ 1 +(1 +pastcorrectresp+pastcatchtrial |ferret), data = df, REML=FALSE)
+nullmodel3 <- lmer( correctresp ~ 1 +(1 +pastcorrectresp+pastcatchtrial |ferret), data = df, REML=FALSE)
 
-nullmodel4 <- lmer( realRelReleaseTimes ~ 1 +(0 +pastcorrectresp |ferret), data = df, REML=FALSE)
+nullmodel4 <- lmer( correctresp ~ 1 +(0 +pastcorrectresp |ferret), data = df, REML=FALSE)
 
-nullmodel5 <- lmer( realRelReleaseTimes ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret), data = df, REML=FALSE)
-nullmodel6 <- lmer( realRelReleaseTimes ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret)+(0 +trialNum |ferret), data = df, REML=FALSE)
+nullmodel5 <- lmer( correctresp ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret), data = df, REML=FALSE)
+nullmodel6 <- lmer( correctresp ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret)+(0 +trialNum |ferret), data = df, REML=FALSE)
 
-nullmodel7 <- lmer( realRelReleaseTimes ~ 1 + (talker+timeToTarget+side |ferret), data = df, REML=FALSE)
-nullmodel8 <- lmer( realRelReleaseTimes ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +AM |ferret), data = df, REML=FALSE)
+nullmodel7 <- lmer( correctresp ~ 1 + (talker+timeToTarget+side |ferret), data = df, REML=FALSE)
+nullmodel8 <- lmer( correctresp ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +AM |ferret), data = df, REML=FALSE)
+nullmodel9<- lmer( correctresp ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +AM |ferret)+(0+precur_and_targ_same|ferret), data = df, REML=FALSE)
+nullmodel10 <- lmer( correctresp ~ 1 + (talker+timeToTarget+side+precur_and_targ_same |ferret), data = df, REML=FALSE)
 
-anova (nullmodel1, nullmodel2, nullmodel3, nullmodel4, nullmodel5, nullmodel6, nullmodel7, nullmodel8, nullmodel22)
+anova (nullmodel1, nullmodel2, nullmodel3, nullmodel4, nullmodel5, nullmodel6, nullmodel7, nullmodel8, nullmodel22, nullmodel9, nullmodel10)
 
 
 
 
 #now adding fixed effects 
 modelreg_reduc1 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
+  realRelReleaseTimes ~ pitchoftarg+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+precur_and_targ_same |ferret),
   data=df, REML = FALSE, )#control = lmerControl(optimizer ="Nelder_Mead")
 
 modelreg_reduc2 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
+  realRelReleaseTimes ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+precur_and_targ_same |ferret),
   data=df, REML = FALSE,)
 
 modelreg_reduc3 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+stepval+talker+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
+  realRelReleaseTimes ~ pitchoftarg+stepval+talker+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+precur_and_targ_same |ferret),
   data=df, REML = FALSE,)
 
 modelreg_reduc4 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
+  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+precur_and_targ_same |ferret)
   data=df, REML = FALSE, )
 
 modelreg_reduc5 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
+  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+precur_and_targ_same |ferret),
   data=df, REML = FALSE)
 
 modelreg_reduc55 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg*stepval+talker*stepval+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
+  realRelReleaseTimes ~ pitchoftarg*stepval+talker*stepval+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+precur_and_targ_same |ferret),
   data=df, REML = TRUE)
 
 modelreg_reduc6 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+timeToTarget+AM+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
+  realRelReleaseTimes ~ pitchoftarg+stepval+talker+side+timeToTarget+AM+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+precur_and_targ_same |ferret),
+  data=df, REML = FALSE)
+modelreg_reduc66 <- lmer(
+  correctresp ~ pitchoftarg+stepval+talker+side+timeToTarget+AM+trialNum+pastcorrectresp+pastcatchtrial+precur_and_targ_same+(talker+timeToTarget+side+precur_and_targ_same |ferret),
   data=df, REML = FALSE)
 # talker*(pitchoftarg)+side + talker*stepval+timeToTarget
 modelreg_reduc7 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg*stepval+talker*pitchoftarg+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
+  realRelReleaseTimes ~ pitchoftarg*stepval+talker*pitchoftarg+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+precur_and_targ_same |ferret),
   data=df, REML = FALSE)
-
+modelreg_reduc72 <- lmer(
+  correctresp ~ pitchoftarg*stepval+talker*pitchoftarg+pitchoftarg*precur_and_targ_same+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+precur_and_targ_same |ferret),
+  data=df, REML = FALSE)
 modelreg_reduc8 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg*stepval+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side |ferret),
+  realRelReleaseTimes ~ pitchoftarg*stepval+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+precur_and_targ_same |ferret),
   data=df, REML = FALSE)
 modelreg_reduc9 <- lmer(
-  realRelReleaseTimes ~ pitchoftarg*stepval*talker+trialNum+(talker+timeToTarget+side |ferret),
+  realRelReleaseTimes ~ pitchoftarg*stepval*talker+trialNum+(talker+timeToTarget+side+precur_and_targ_same |ferret),
   data=df, REML = FALSE)
 
 
-anova(modelreg_reduc1, modelreg_reduc2, modelreg_reduc3, modelreg_reduc4, modelreg_reduc5, modelreg_reduc55,modelreg_reduc6, modelreg_reduc7, modelreg_reduc8, modelreg_reduc9)
+anova(modelreg_reduc1, modelreg_reduc2, modelreg_reduc3, modelreg_reduc4, modelreg_reduc5, modelreg_reduc55,modelreg_reduc6, modelreg_reduc66, modelreg_reduc7,modelreg_reduc72,modelreg_reduc8, modelreg_reduc9)
 coeff=r2(modelreg_reduc6)
 #declare chosen model HERE:
 chosen_model <- modelreg_reduc6
@@ -132,5 +140,5 @@ set_theme(base = theme_classic(), #To remove the background color and the grids
           axis.title.size = 1.5,  #To change axis title size
           axis.textsize.x = 1.2,  #To change x axis text size
           axis.textsize.y = 1.2)  #To change y axis text size
-plot_model(chosen_model, title = 'Ranked features of the reaction time model of the subset of the correct responses')
+plot_model(chosen_model, show.values = TRUE, value.offset = 0.3, title = 'Ranked features of the reaction time model of the subset of the correct responses')
 
