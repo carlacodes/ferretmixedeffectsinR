@@ -43,63 +43,73 @@ nullmodel4 <- lmer( falsealarm ~ 1 +(0 +pastcorrectresp |ferret), data = df, REM
 nullmodel5 <- lmer( falsealarm ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret), data = df, REML=FALSE)
 nullmodel6 <- lmer( falsealarm ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret)+(0 +trialNum |ferret), data = df, REML=FALSE)
 
-nullmodel7 <- lmer( falsealarm ~ 1 + (talker+timeToTarget+side |ferret), data = df, REML=FALSE)
+nullmodel7 <- lmer( falsealarm ~ 1 + (talker+targTimes+side |ferret), data = df, REML=FALSE)
 nullmodel8 <- lmer( falsealarm ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +AM |ferret), data = df, REML=FALSE)
 nullmodel9<- lmer( falsealarm ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +AM |ferret)+(0+intra_trial_roving|ferret), data = df, REML=FALSE)
-nullmodel10 <- lmer( falsealarm ~ 1 + (talker+timeToTarget+side+intra_trial_roving |ferret), data = df, REML=FALSE)
+nullmodel10 <- lmer( falsealarm ~ 1 + (talker+targTimes+side+intra_trial_roving |ferret), data = df, REML=FALSE)
 
-anova (nullmodel1, nullmodel2, nullmodel3, nullmodel4, nullmodel5, nullmodel6, nullmodel7, nullmodel8, nullmodel22, nullmodel9, nullmodel10)
 
+nullmodel72 <- lmer( falsealarm ~ 1 + (talker |ferret), data = df, REML=FALSE)
+nullmodel73 <- lmer( falsealarm ~ 1 + (talker+intra_trial_roving |ferret), data = df, REML=FALSE)
+nullmodel74 <- lmer( falsealarm ~ 1 + (intra_trial_roving |ferret), data = df, REML=FALSE)
+nullmodel75 <- lmer( falsealarm ~ 1 + (intra_trial_roving+side |ferret), data = df, REML=FALSE)
+nullmodel76 <- lmer( falsealarm ~ 1 + (side |ferret), data = df, REML=FALSE)
+nullmodel77 <- lmer( falsealarm ~ 1 + (talker+side |ferret), data = df, REML=FALSE)
+nullmodel78 <- lmer( falsealarm ~ 1 + (talker+targTimes |ferret), data = df, REML=FALSE)
+nullmodel79 <- lmer( falsealarm ~ 1 + (targTimes |ferret), data = df, REML=FALSE)
+
+
+anova (nullmodel1, nullmodel2, nullmodel3, nullmodel4, nullmodel5, nullmodel6, nullmodel7,nullmodel72, nullmodel73, nullmodel74, nullmodel75, nullmodel76,nullmodel77, nullmodel78, nullmodel79, nullmodel8, nullmodel22, nullmodel9, nullmodel10)
 
 
 
 #now adding fixed effects 
 modelreg_reduc1 <- lmer(
-  falsealarm ~ pitchoftarg+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+intra_trial_roving |ferret),
+  falsealarm ~ pitchoftarg+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
   data=df, REML = FALSE, )#control = lmerControl(optimizer ="Nelder_Mead")
 
 modelreg_reduc2 <- lmer(
-  falsealarm ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+intra_trial_roving |ferret),
+  falsealarm ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
   data=df, REML = FALSE,)
 
 modelreg_reduc3 <- lmer(
-  falsealarm ~ pitchoftarg+stepval+talker+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+intra_trial_roving |ferret),
+  falsealarm ~ pitchoftarg+stepval+talker+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
   data=df, REML = FALSE,)
 
 modelreg_reduc4 <- lmer(
-  falsealarm ~ pitchoftarg+stepval+talker+side+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+intra_trial_roving |ferret),
+  falsealarm ~ pitchoftarg+stepval+talker+side+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
   data=df, REML = FALSE, )
 
 modelreg_reduc5 <- lmer(
-  falsealarm ~ pitchoftarg+stepval+talker+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+intra_trial_roving |ferret),
+  falsealarm ~ pitchoftarg+stepval+talker+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
   data=df, REML = FALSE)
 
 modelreg_reduc55 <- lmer(
-  falsealarm ~ pitchoftarg*stepval+talker*stepval+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+intra_trial_roving |ferret),
+  falsealarm ~ pitchoftarg*stepval+talker*stepval+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
   data=df, REML = TRUE)
 
 modelreg_reduc66 <- lmer(
-  falsealarm ~ pitchoftarg+stepval+talker+side+timeToTarget+AM+trialNum+pastcorrectresp+pastcatchtrial+intra_trial_roving+(talker+timeToTarget+side+intra_trial_roving |ferret),
+  falsealarm ~ pitchoftarg+stepval+talker+side+targTimes+AM+trialNum+pastcorrectresp+pastcatchtrial+intra_trial_roving+(targTimes |ferret),
   data=df, REML = FALSE)
 modelreg_reduc6 <- lmer(
-  falsealarm ~ pitchoftarg+stepval+talker+side+timeToTarget+AM+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+intra_trial_roving |ferret),
+  falsealarm ~ pitchoftarg+stepval+talker+side+targTimes+AM+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
   data=df, REML = FALSE)
-# talker*(pitchoftarg)+side + talker*stepval+timeToTarget
+# talker*(pitchoftarg)+side + talker*stepval+targTimes
 modelreg_reduc7 <- lmer(
-  falsealarm ~ pitchoftarg*stepval+talker*pitchoftarg+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+intra_trial_roving |ferret),
+  falsealarm ~ pitchoftarg*stepval+talker*pitchoftarg+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
   data=df, REML = FALSE)
 modelreg_reduc72 <- lmer(
-  falsealarm ~ pitchoftarg*stepval+talker*pitchoftarg+pitchoftarg*intra_trial_roving+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+intra_trial_roving |ferret),
+  falsealarm ~ pitchoftarg*stepval+talker*pitchoftarg+pitchoftarg*intra_trial_roving+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
   data=df, REML = FALSE)
 
 modelreg_reduc8 <- lmer(
-  falsealarm ~ pitchoftarg*stepval+trialNum+pastcorrectresp+pastcatchtrial+(talker+timeToTarget+side+intra_trial_roving |ferret),
+  falsealarm ~ pitchoftarg*stepval+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
   data=df, REML = FALSE)
 modelreg_reduc9 <- lmer(
-  falsealarm ~ pitchoftarg*stepval*talker+trialNum+(talker+timeToTarget+side+intra_trial_roving |ferret),
+  falsealarm ~ pitchoftarg*stepval*talker+trialNum+(targTimes |ferret),
   data=df, REML = FALSE)
 modelreg_reduc10 <- lmer(
-  falsealarm ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+intra_trial_roving+(talker+timeToTarget+side+intra_trial_roving |ferret),
+  falsealarm ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+intra_trial_roving+(targTimes |ferret),
   data=df, REML = FALSE)
 
 anova(modelreg_reduc1, modelreg_reduc2, modelreg_reduc3, modelreg_reduc4, modelreg_reduc5, modelreg_reduc55,modelreg_reduc6,modelreg_reduc66, modelreg_reduc7,modelreg_reduc72, modelreg_reduc8, modelreg_reduc9, modelreg_reduc10)

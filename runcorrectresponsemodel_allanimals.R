@@ -48,7 +48,15 @@ nullmodel8 <- lmer( correctresp ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +
 nullmodel9<- lmer( correctresp ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +AM |ferret)+(0+precur_and_targ_same|ferret), data = df, REML=FALSE)
 nullmodel10 <- lmer( correctresp ~ 1 + (talker+timeToTarget+side+precur_and_targ_same |ferret), data = df, REML=FALSE)
 
-anova (nullmodel1, nullmodel2, nullmodel3, nullmodel4, nullmodel5, nullmodel6, nullmodel7, nullmodel8, nullmodel22, nullmodel9, nullmodel10)
+nullmodel72 <- lmer( correctresp ~ 1 + (talker |ferret), data = df, REML=FALSE)
+nullmodel73 <- lmer( correctresp ~ 1 + (talker+precur_and_targ_same |ferret), data = df, REML=FALSE)
+nullmodel74 <- lmer( correctresp ~ 1 + (precur_and_targ_same |ferret), data = df, REML=FALSE)
+nullmodel75 <- lmer( correctresp ~ 1 + (precur_and_targ_same+side |ferret), data = df, REML=FALSE)
+nullmodel76 <- lmer( correctresp ~ 1 + (side |ferret), data = df, REML=FALSE)
+nullmodel77 <- lmer( correctresp ~ 1 + (talker+side |ferret), data = df, REML=FALSE)
+nullmodel78 <- lmer( correctresp ~ 1 + (talker+timeToTarget |ferret), data = df, REML=FALSE)
+nullmodel79 <- lmer( correctresp ~ 1 + (timeToTarget |ferret), data = df, REML=FALSE)
+anova (nullmodel1, nullmodel2, nullmodel3, nullmodel4, nullmodel5, nullmodel6, nullmodel7,nullmodel72, nullmodel73, nullmodel74, nullmodel75, nullmodel76,nullmodel77, nullmodel78, nullmodel79, nullmodel8, nullmodel22, nullmodel9, nullmodel10)
 
 
 
@@ -103,9 +111,9 @@ modelreg_reduc10 <- lmer(
   data=df, REML = FALSE)
 
 anova(modelreg_reduc1, modelreg_reduc2, modelreg_reduc3, modelreg_reduc4, modelreg_reduc5, modelreg_reduc55,modelreg_reduc6,modelreg_reduc66, modelreg_reduc7,modelreg_reduc72, modelreg_reduc8, modelreg_reduc9, modelreg_reduc10)
-coeff=r2(modelreg_reduc6)
+coeff=r2(modelreg_reduc66)
 #declare chosen model HERE:
-chosen_model <- modelreg_reduc6
+chosen_model <- modelreg_reduc66
 
 
 oneferret=subset(df, ferret == 1)
