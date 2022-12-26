@@ -12,6 +12,11 @@ library(multilevelTools)
 library(hash)
 library(glmnet)
 library(AICcmodavg)
+library(sjPlot)
+library(sjlabelled)
+library(sjmisc)
+library(ggplot2)
+
 data(QuickStartExample)
 x <- QuickStartExample$x
 y <- QuickStartExample$y
@@ -86,6 +91,7 @@ eval_results <- function(true, predicted, df) {
 }
 
 modelstore_releasetimes=list()
+r2list_releasetimes=list()
 
 for (i in 0:3) {
   print(i) 
@@ -112,12 +118,14 @@ for (i in 0:3) {
   summary(best_model_releasetimes)
   
   modelstore_releasetimes<- append(modelstore_releasetimes, best_model_releasetimes) 
+  r2list_releasetimes <-append(r2list_releasetimes,  r2(best_model)) 
   
   
-  preddata=predict(best_model, data.matrix(X))
+  preddata=predict(best_model_releasetimes, X)
+  coeffrank <- plot_model(best_model, show.values = TRUE, value.offset = 0.3,title =  (paste("Release time with ferret", ferret_list[i+1])))
+  ggsave(filename = paste(ferret_list[i+1],"rankedcoeefreleasetime.png"), plot = coeffrank)
   
-  
-  plot(as.numeric(unlist(df_animal['correctresp'])), preddata, main="actual vs. predicted correct response",
+  plot(as.numeric(unlist(df_animal['realRelReleaseTimes'])), preddata, main="actual vs. predicted correct response",
        xlab="actual ", ylab="predicted ", pch=19)
   
   
@@ -126,12 +134,15 @@ for (i in 0:3) {
 }
 
 modelstore_correctresponse=list()
-
+r2list_correctresponse=list()
+ferret_list=c('Zola', 'Cruella', 'Tina', 'Macaroni')
 for (i in 0:3) {
   print(i) 
   df_animal <- subset(dfcorrectresponse, ferret == i)
   #X = subset(df_animal, select = -c(correctresp) )
   X = subset(df_animal, select = -c(ferret) )
+  X = subset(df_animal, select = -c(ferret) )
+  
   X<-as.data.frame(X)
 
   
@@ -153,14 +164,59 @@ for (i in 0:3) {
   summary(best_model)
   
   modelstore_correctresponse = append(modelstore_correctresponse, best_model)
+  r2list_correctresponse = append(r2list_correctresponse, r2(best_model))
+  
 
   
-  preddata=predict(best_model, data.matrix(X))
+  preddata=predict(best_model, X)
+  
+  coeffrank<- plot_model(best_model, show.values = TRUE, value.offset = 0.3,title =  (paste("Correct response model with ferret", ferret_list[i+1])))
+  ggsave(filename = paste(ferret_list[i+1],"correctresponse_rankedcoeef.png"), plot = coeffrank)
   
   
   plot(as.numeric(unlist(df_animal['correctresp'])), preddata, main="actual vs. predicted correct response",
        xlab="actual ", ylab="predicted ", pch=19)
 
+  
+  
+  
+}
+
+modelstore_falsealarm=list()
+r2list_falsealarm=list()
+ferret_list=c('Zola', 'Cruella', 'Tina', 'Macaroni')
+for (i in 0:3) {
+  print(i) 
+  df_animal <- subset(df_falsealarm, ferret == i)
+  X = subset(df_animal, select = -c(ferret) )
+
+  X<-as.data.frame(X)
+  
+  
+  
+  
+  
+  # Create the full model with all predictor variables
+  full_model <- glm(falsealarm ~ ., data = X, family='binomial')
+  
+  # Use the step() function to select the best model using ANOVA
+  best_model <- step(full_model, direction = "backward", scope = formula(full_model), k = 2, trace = 0)
+  
+  # Print the summary of the best model
+  summary(best_model)
+  
+  modelstore_falsealarm = append(modelstore_falsealarm, best_model)
+  r2list_falsealarm = append(r2list_falsealarm, r2(best_model))
+  
+  
+  preddata=predict(best_model, X)
+  
+  coeffrank <- plot_model(best_model, show.values = TRUE, value.offset = 0.3,title =  (paste("False alarm with ferret", ferret_list[i+1])))
+  ggsave(filename = paste(ferret_list[i+1],"rankedcoeef.png"), plot = coeffrank)
+  plot.new()
+  predversusactual<-plot(as.numeric(unlist(df_animal['falsealarm'])), preddata, main="actual vs. predicted response",
+       xlab="actual ", ylab="predicted ", pch=19)
+  
   
   
   
