@@ -25,6 +25,9 @@ storecv_correctresp <- list()
 storemod_correctresp <- list()
 
 df <- read.csv("df.csv")
+df_fa <- read.csv("falsealarmmodel_dfuse.csv")
+df_correctresp <- read.csv("correctresponsemodel_dfuse.csv")
+
 
 dfcat <- read.csv("dfcat.csv")
 storemod <- list()
@@ -60,7 +63,11 @@ dfcatuse$ferret=factor(dfcatuse$ferret)
 dfcatuse$pastcatchtrial=factor(dfcatuse$pastcatchtrial)
 dfcatuse$pastcorrectresp = factor(dfcatuse$pastcorrectresp)
 
-dfsmall <- df[c("ferret", "realRelReleaseTimes", "pitchoftarg","talker","stepval", "side", "timeToTarget", "trialNum", "pastcorrectresp", "pastcatchtrial")]
+
+dfcorrectresponse <- df_correctresp[c("ferret", "correctresp", "pitchoftarg","talker","stepval", "side", "timeToTarget","precur_and_targ_same","trialNum", "pastcorrectresp", "pastcatchtrial")]
+df_falsealarm <-df_fa[c("ferret", "falsealarm", "pitchoftarg","talker","stepval", "side", "timeToTarget","intra_trial_roving","trialNum", "pastcorrectresp", "pastcatchtrial")]
+dfsmall <- df[c("ferret", "realRelReleaseTimes", "pitchoftarg","talker","stepval", "side", "timeToTarget","precur_and_targ_same","trialNum", "pastcorrectresp", "pastcatchtrial")]
+
 eval_results <- function(true, predicted, df) {
   SSE <- sum((predicted - true)^2)
   SST <- sum((true - mean(true))^2)
@@ -78,7 +85,7 @@ eval_results <- function(true, predicted, df) {
 
 for (i in 0:3) {
   print(i) 
-  df_animal <- subset(dfuse, ferret == i)
+  df_animal <- subset(dfsmall, ferret == i)
   X = subset(df_animal, select = -c(realRelReleaseTimes) )
   X = subset(X, select = -c(X) )
   X = subset(X, select = -c(ferret) )
@@ -128,7 +135,7 @@ for (i in 0:3) {
 
 for (i in 0:3) {
   print(i) 
-  df_animal <- subset(dfcatuse, ferret == i)
+  df_animal <- subset(dfcorrectresponse, ferret == i)
   X = subset(df_animal, select = -c(correctresp) )
   X = subset(X, select = -c(X) )
   X = subset(X, select = -c(ferret) )
