@@ -92,6 +92,7 @@ for (i in 0:3) {
   df_animal <- subset(dfsmall, ferret == i)
   #X = subset(df_animal, select = -c(realRelReleaseTimes) )
   X = subset(df_animal, select = -c(ferret) )
+  X<-as.data.frame(X)
   
   
   #X=model.matrix(X)
@@ -124,11 +125,14 @@ for (i in 0:3) {
   
 }
 
+modelstore_correctresponse=list()
+
 for (i in 0:3) {
   print(i) 
   df_animal <- subset(dfcorrectresponse, ferret == i)
   #X = subset(df_animal, select = -c(correctresp) )
   X = subset(df_animal, select = -c(ferret) )
+  X<-as.data.frame(X)
 
   
   
@@ -140,7 +144,7 @@ for (i in 0:3) {
   
  
   # Create the full model with all predictor variables
-  full_model <- lm(correctresp ~ ., data = X)
+  full_model <- glm(correctresp ~ ., data = X, family='binomial')
   
   # Use the step() function to select the best model using ANOVA
   best_model <- step(full_model, direction = "backward", scope = formula(full_model), k = 2, trace = 0)
@@ -148,7 +152,7 @@ for (i in 0:3) {
   # Print the summary of the best model
   summary(best_model)
   
-  modelstore[i+1] = best_model
+  modelstore_correctresponse = append(modelstore_correctresponse, best_model)
 
   
   preddata=predict(best_model, data.matrix(X))
