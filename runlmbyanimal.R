@@ -71,9 +71,9 @@ dfcatuse$pastcatchtrial=factor(dfcatuse$pastcatchtrial)
 dfcatuse$pastcorrectresp = factor(dfcatuse$pastcorrectresp)
 
 
-dfcorrectresponse <- df_correctresp[c("ferret", "correctresp", "pitchoftarg","talker","stepval", "side", "timeToTarget","precur_and_targ_same","trialNum", "pastcorrectresp", "pastcatchtrial")]
-df_falsealarm <-df_fa[c("ferret", "falsealarm", "pitchoftarg","talker","stepval", "side", "timeToTarget","intra_trial_roving","trialNum", "pastcorrectresp", "pastcatchtrial")]
-dfsmall <- df[c("ferret", "realRelReleaseTimes", "pitchoftarg","talker","stepval", "side", "timeToTarget","precur_and_targ_same","trialNum", "pastcorrectresp", "pastcatchtrial")]
+dfcorrectresponse <- df_correctresp[c("ferret", "AM", "correctresp", "pitchoftarg","talker","stepval", "side", "timeToTarget","precur_and_targ_same","trialNum", "pastcorrectresp", "pastcatchtrial")]
+df_falsealarm <-df_fa[c("ferret", "falsealarm", "AM", "pitchoftarg","talker","stepval", "side", "timeToTarget","intra_trial_roving","trialNum", "pastcorrectresp", "pastcatchtrial")]
+dfsmall <- df[c("ferret", "realRelReleaseTimes","AM",  "pitchoftarg","talker","stepval", "side", "timeToTarget","precur_and_targ_same","trialNum", "pastcorrectresp", "pastcatchtrial")]
 
 eval_results <- function(true, predicted, df) {
   SSE <- sum((predicted - true)^2)
