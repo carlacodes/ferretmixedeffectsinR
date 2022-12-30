@@ -145,15 +145,15 @@ abline(a=0, b=1)
 plot(as.numeric(unlist(macdata['falsealarm'])), macpred, main="Mac actual vs. predicted correct responses",
      xlab="actual ", ylab="predicted ", pch=19)
 abline(a=0, b=1)
-max(df$pastcatchtrial)
 set_theme(base = theme_classic(), #To remove the background color and the grids
           theme.font = 'serif',   #To change the font type
-          title.size=2,
-          axis.title.size = 1.5,  #To change axis title size
-          axis.textsize.x = 1.2,  #To change x axis text size
-          axis.textsize.y = 1.2)  #To change y axis text size
+          title.size=1,
+          axis.title.size = 0.5,  #To change axis title size
+          axis.textsize.x = 1,  #To change x axis text size
+          axis.textsize.y = 1)  #To change y axis text size
 
-plot_model(chosen_model,show.values = TRUE, value.offset = 0.3, title = 'Ranked features of the false alarm model')
-png(file="D:/behavmodelfigs/mixedeffectsmodels/falsealarm_modelforestplot.png",
-    width=600, height=350)
+forestplot <- plot_model(chosen_model,show.values = TRUE, value.offset = 0.5, title = 'Ranked features of the false alarm model')
+
+# Save the plot as a JPEG file
+ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/falsealarm_modelforestplot.png", plot = forestplot, width = 7, height = 10)
 dev.off()

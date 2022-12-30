@@ -63,16 +63,16 @@ nullmodel78 <- lmer( correctresp ~ 1 + (talker+timeToTarget |ferret), data = df,
 nullmodel79 <- lmer( correctresp ~ 1 + (timeToTarget |ferret), data = df, REML=FALSE)
 anova (nullmodel1, nullmodel2, nullmodel3, nullmodel4, nullmodel5, nullmodel6, nullmodel7,nullmodel72, nullmodel73, nullmodel74, nullmodel75, nullmodel76,nullmodel77, nullmodel78, nullmodel79, nullmodel8, nullmodel22, nullmodel9, nullmodel10)
 
-model <- lmer(correctresp ~ . + (talker+timeToTarget+side+precur_and_targ_same
- |ferret), data = df)
+model <- lmer(correctresp ~ . + (1 |ferret), data = df)
 #talker+timeToTarget+side+precur_and_targ_same
 
 
 model_selected<-stepcAIC(model)
 
-coeff=r2(model_selected)
 #declare chosen model HERE:
 chosen_model <- model_selected$finalModel
+coeff=r2(chosen_model)
+
 
 summary(model_selected)
 
