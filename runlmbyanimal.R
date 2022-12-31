@@ -113,7 +113,7 @@ eval_results <- function(true, predicted, df) {
 
 modelstore_releasetimes=list()
 r2list_releasetimes=list()
-ferret_list=c('Zola', 'Cruella', 'Tina', 'Macaroni')
+ferret_list=c('F1702', 'F1815', 'F1803', 'F2002')
 
 for (i in 0:3) {
   print(i) 
@@ -144,7 +144,7 @@ for (i in 0:3) {
   
   
   preddata=predict(best_model_releasetimes, X)
-  coeffrank <- plot_model(best_model_releasetimes, show.values = TRUE, value.offset = 0.3,title =  (paste("Release time for correct responses,  ferret", ferret_list[i+1])))
+  coeffrank <- plot_model(best_model_releasetimes, show.values = TRUE, value.offset = 0.3,title =  (paste("Release time model for", ferret_list[i+1])))
   ggsave(filename = paste(ferret_list[i+1],"rankedcoeefreleasetime.png"), plot = coeffrank, width =5, height=5)
   
   plot(as.numeric(unlist(df_animal['realRelReleaseTimes'])), preddata, main="actual vs. predicted correct response",
@@ -157,7 +157,6 @@ for (i in 0:3) {
 
 modelstore_correctresponse=list()
 r2list_correctresponse=list()
-ferret_list=c('Zola', 'Cruella', 'Tina', 'Macaroni')
 for (i in 0:3) {
   print(i) 
   df_animal <- subset(dfcorrectresponse, ferret == i)
@@ -192,7 +191,7 @@ for (i in 0:3) {
   
   preddata=predict(best_model, X)
   
-  coeffrank<- plot_model(best_model, show.values = TRUE, value.offset = 0.3,title =  (paste("Correct response model for ferret", ferret_list[i+1])))
+  coeffrank<- plot_model(best_model, show.values = TRUE, value.offset = 0.3,title =  (paste("Correct response model for ", ferret_list[i+1])))
   ggsave(filename = paste(ferret_list[i+1],"correctresponse_rankedcoeef.png"), plot = coeffrank, width = 5, height= 7)
   
   
@@ -233,7 +232,7 @@ for (i in 0:3) {
   
   preddata=predict(best_model, X)
   
-  coeffrank <- plot_model(best_model, show.values = TRUE, value.offset = 0.3,title =  (paste("False alarm model for ferret", ferret_list[i+1])))
+  coeffrank <- plot_model(best_model, show.values = TRUE, value.offset = 0.3,title =  (paste("False alarm model for ", ferret_list[i+1])))
   ggsave(filename = paste(ferret_list[i+1],"rankedcoeef.png"), plot = coeffrank, width =5, height=5)
   plot.new()
   predversusactual<-plot(as.numeric(unlist(df_animal['falsealarm'])), preddata, main="actual vs. predicted response",
