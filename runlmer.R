@@ -147,7 +147,7 @@ abline(a=0, b=1)
 plot(as.numeric(unlist(macdata['realRelReleaseTimes'])), macpred, main="Mac actual vs. predicted lick release times",
      xlab="actual ", ylab="predicted ", pch=19)
 abline(a=0, b=1)
-max(df$pastcatchtrial)
+
 
 
 set_theme(base = theme_classic(), #To remove the background color and the grids
@@ -161,3 +161,4 @@ forestplot <- plot_model(chosen_model,show.values = TRUE, value.offset = 0.5, ti
 
 # Save the plot as a JPEG file
 ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/correctreleasetimes_modelforestplot.png", plot = forestplot, width = 7, height = 10)
+dev.off()

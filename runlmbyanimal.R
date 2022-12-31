@@ -51,6 +51,27 @@ df$pastcatchtrial=factor(df$pastcatchtrial)
 df$pastcorrectresp = factor(df$pastcorrectresp)
 df$precur_and_targ_same = factor(df$precur_and_targ_same)
 
+df_correctresp$side=factor(df_correctresp$side)
+df_correctresp$talker=factor(df_correctresp$talker)
+df_correctresp$pitchoftarg=factor(df_correctresp$pitchoftarg)
+df_correctresp$stepval=factor(df_correctresp$stepval)
+df_correctresp$AM=factor(df_correctresp$AM)
+df_correctresp$ferret=factor(df_correctresp$ferret)
+df_correctresp$pastcatchtrial=factor(df_correctresp$pastcatchtrial)
+df_correctresp$pastcorrectresp = factor(df_correctresp$pastcorrectresp)
+df_correctresp$precur_and_targ_same = factor(df_correctresp$precur_and_targ_same)
+
+df_fa$side=factor(df_fa$side)
+df_fa$talker=factor(df_fa$talker)
+df_fa$pitchoftarg=factor(df_fa$pitchoftarg)
+df_fa$stepval=factor(df_fa$stepval)
+df_fa$AM=factor(df_fa$AM)
+df_fa$ferret=factor(df_fa$ferret)
+df_fa$pastcatchtrial=factor(df_fa$pastcatchtrial)
+df_fa$pastcorrectresp = factor(df_fa$pastcorrectresp)
+df_fa$intra_trial_roving = factor(df_fa$intra_trial_roving)
+
+
 
 dfuse$side=factor(dfuse$side)
 dfuse$talker=factor(dfuse$talker)
@@ -92,6 +113,7 @@ eval_results <- function(true, predicted, df) {
 
 modelstore_releasetimes=list()
 r2list_releasetimes=list()
+ferret_list=c('Zola', 'Cruella', 'Tina', 'Macaroni')
 
 for (i in 0:3) {
   print(i) 
@@ -118,12 +140,12 @@ for (i in 0:3) {
   summary(best_model_releasetimes)
   
   modelstore_releasetimes<- append(modelstore_releasetimes, best_model_releasetimes) 
-  r2list_releasetimes <-append(r2list_releasetimes,  r2(best_model)) 
+  r2list_releasetimes <-append(r2list_releasetimes,  r2(best_model_releasetimes)) 
   
   
   preddata=predict(best_model_releasetimes, X)
-  coeffrank <- plot_model(best_model, show.values = TRUE, value.offset = 0.3,title =  (paste("Release time with ferret", ferret_list[i+1])))
-  ggsave(filename = paste(ferret_list[i+1],"rankedcoeefreleasetime.png"), plot = coeffrank)
+  coeffrank <- plot_model(best_model_releasetimes, show.values = TRUE, value.offset = 0.3,title =  (paste("Release time for correct responses,  ferret", ferret_list[i+1])))
+  ggsave(filename = paste(ferret_list[i+1],"rankedcoeefreleasetime.png"), plot = coeffrank, width =5, height=5)
   
   plot(as.numeric(unlist(df_animal['realRelReleaseTimes'])), preddata, main="actual vs. predicted correct response",
        xlab="actual ", ylab="predicted ", pch=19)
@@ -170,8 +192,8 @@ for (i in 0:3) {
   
   preddata=predict(best_model, X)
   
-  coeffrank<- plot_model(best_model, show.values = TRUE, value.offset = 0.3,title =  (paste("Correct response model with ferret", ferret_list[i+1])))
-  ggsave(filename = paste(ferret_list[i+1],"correctresponse_rankedcoeef.png"), plot = coeffrank)
+  coeffrank<- plot_model(best_model, show.values = TRUE, value.offset = 0.3,title =  (paste("Correct response model for ferret", ferret_list[i+1])))
+  ggsave(filename = paste(ferret_list[i+1],"correctresponse_rankedcoeef.png"), plot = coeffrank, width = 5, height= 7)
   
   
   plot(as.numeric(unlist(df_animal['correctresp'])), preddata, main="actual vs. predicted correct response",
@@ -211,8 +233,8 @@ for (i in 0:3) {
   
   preddata=predict(best_model, X)
   
-  coeffrank <- plot_model(best_model, show.values = TRUE, value.offset = 0.3,title =  (paste("False alarm with ferret", ferret_list[i+1])))
-  ggsave(filename = paste(ferret_list[i+1],"rankedcoeef.png"), plot = coeffrank)
+  coeffrank <- plot_model(best_model, show.values = TRUE, value.offset = 0.3,title =  (paste("False alarm model for ferret", ferret_list[i+1])))
+  ggsave(filename = paste(ferret_list[i+1],"rankedcoeef.png"), plot = coeffrank, width =5, height=5)
   plot.new()
   predversusactual<-plot(as.numeric(unlist(df_animal['falsealarm'])), preddata, main="actual vs. predicted response",
        xlab="actual ", ylab="predicted ", pch=19)

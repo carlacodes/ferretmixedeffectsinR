@@ -146,7 +146,7 @@ abline(a=0, b=1)
 
 set_theme(base = theme_classic(), #To remove the background color and the grids
           theme.font = 'serif',   #To change the font type
-          title.size=1,
+          title.size=1.5,
           axis.title.size = 0.5,  #To change axis title size
           axis.textsize.x = 1,  #To change x axis text size
           axis.textsize.y = 1)  #To change y axis text size
