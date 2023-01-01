@@ -205,7 +205,6 @@ for (i in 0:3) {
 
 modelstore_falsealarm=list()
 r2list_falsealarm=list()
-ferret_list=c('Zola', 'Cruella', 'Tina', 'Macaroni')
 for (i in 0:3) {
   print(i) 
   df_animal <- subset(df_falsealarm, ferret == i)
