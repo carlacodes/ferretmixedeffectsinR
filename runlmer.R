@@ -31,6 +31,8 @@ df$pastcatchtrial=factor(df$pastcatchtrial)
 df$pastcorrectresp = factor(df$pastcorrectresp)
 df$precur_and_targ_same = factor(df$precur_and_targ_same)
 
+df$realRelReleaseTimes = log(df$realRelReleaseTimes)
+
 ##fit individual model to each animal
 #look at reaction time mixed effects model in humans or any other types of studies 
 nullmodel1 <- lmer( realRelReleaseTimes ~ 1 + (1|ferret), data = df, REML=FALSE)
@@ -115,9 +117,9 @@ modelreg_reduc9 <- lmer(
 
 
 anova(modelreg_reduc1, modelreg_reduc2, modelreg_reduc3, modelreg_reduc4, modelreg_reduc5, modelreg_reduc55,modelreg_reduc6,modelreg_reduc66, modelreg_reduc7, modelreg_reduc72, modelreg_reduc8, modelreg_reduc9)
-coeff=r2(modelreg_reduc66)
+coeff=r2(modelreg_reduc5)
 #declare chosen model HERE:
-chosen_model <- modelreg_reduc66
+chosen_model <- modelreg_reduc5
 
 
 oneferret=subset(df, ferret == 1)
