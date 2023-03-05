@@ -130,8 +130,11 @@ for (i in 0:3) {
   #modelreg_reduc5<- glm(realRelReleaseTimes ~  pitchoftarg*talker*stepval*side*timeToTarget*trialNum*pastcorrectresp*pastcatchtrial*AM*DaysSinceStart, data=df_animal, family = 'gaussian')
   
   
-  # Create the full model with all predictor variables
+  # Create the full model with all predictor variables, normalise by log
+  X$realRelReleaseTimes <- log(X$realRelReleaseTimes)
+  
   full_model <- lm(realRelReleaseTimes ~ ., data = X)
+  
   
   # Use the step() function to select the best model using ANOVA
   best_model_releasetimes <- step(full_model, direction = "backward", scope = formula(full_model), k = 2, trace = 0)
