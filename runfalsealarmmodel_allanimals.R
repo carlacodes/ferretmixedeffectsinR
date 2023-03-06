@@ -65,51 +65,51 @@ anova (nullmodel1, nullmodel2, nullmodel3, nullmodel4, nullmodel5, nullmodel6, n
 
 #now adding fixed effects 
 modelreg_reduc1 <- lmer(
-  falsealarm ~ pitchoftarg+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
+  falsealarm ~ pitchoftarg+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE, )#control = lmerControl(optimizer ="Nelder_Mead")
 
 modelreg_reduc2 <- lmer(
-  falsealarm ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
+  falsealarm ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE,)
 
 modelreg_reduc3 <- lmer(
-  falsealarm ~ pitchoftarg+stepval+talker+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
+  falsealarm ~ pitchoftarg+stepval+talker+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE,)
 
 modelreg_reduc4 <- lmer(
-  falsealarm ~ pitchoftarg+stepval+talker+side+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
+  falsealarm ~ pitchoftarg+stepval+talker+side+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE, )
 
 modelreg_reduc5 <- lmer(
-  falsealarm ~ pitchoftarg+stepval+talker+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
+  falsealarm ~ pitchoftarg+stepval+talker+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE)
 
 modelreg_reduc55 <- lmer(
-  falsealarm ~ pitchoftarg*stepval+talker*stepval+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
+  falsealarm ~ pitchoftarg*stepval+talker*stepval+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = TRUE)
 
 modelreg_reduc66 <- lmer(
-  falsealarm ~ pitchoftarg+stepval+talker+side+targTimes+AM+trialNum+pastcorrectresp+pastcatchtrial+intra_trial_roving+(targTimes |ferret),
+  falsealarm ~ pitchoftarg+stepval+talker+side+targTimes+AM+trialNum+pastcorrectresp+pastcatchtrial+intra_trial_roving+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE)
 modelreg_reduc6 <- lmer(
-  falsealarm ~ pitchoftarg+stepval+talker+side+targTimes+AM+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
+  falsealarm ~ pitchoftarg+stepval+talker+side+targTimes+AM+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE)
 # talker*(pitchoftarg)+side + talker*stepval+targTimes
 modelreg_reduc7 <- lmer(
-  falsealarm ~ pitchoftarg*stepval+talker*pitchoftarg+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
+  falsealarm ~ pitchoftarg*stepval+talker*pitchoftarg+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE)
 modelreg_reduc72 <- lmer(
-  falsealarm ~ pitchoftarg*stepval+talker*pitchoftarg+pitchoftarg*intra_trial_roving+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
+  falsealarm ~ pitchoftarg*stepval+talker*pitchoftarg+pitchoftarg*intra_trial_roving+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE)
 
 modelreg_reduc8 <- lmer(
-  falsealarm ~ pitchoftarg*stepval+trialNum+pastcorrectresp+pastcatchtrial+(targTimes |ferret),
+  falsealarm ~ pitchoftarg*stepval+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE)
 modelreg_reduc9 <- lmer(
-  falsealarm ~ pitchoftarg*stepval*talker+trialNum+(targTimes |ferret),
+  falsealarm ~ pitchoftarg*stepval*talker+trialNum+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE)
 modelreg_reduc10 <- lmer(
-  falsealarm ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+intra_trial_roving+(targTimes |ferret),
+  falsealarm ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+intra_trial_roving+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE)
 
 anova(modelreg_reduc1, modelreg_reduc2, modelreg_reduc3, modelreg_reduc4, modelreg_reduc5, modelreg_reduc55,modelreg_reduc6,modelreg_reduc66, modelreg_reduc7,modelreg_reduc72, modelreg_reduc8, modelreg_reduc9, modelreg_reduc10)
