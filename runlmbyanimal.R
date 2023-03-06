@@ -33,6 +33,7 @@ df <- read.csv("df.csv")
 df_fa <- read.csv("falsealarmmodel_dfuse.csv")
 df_correctresp <- read.csv("correctresponsemodel_dfuse.csv")
 
+##modelling the reaction time 
 
 dfcat <- read.csv("dfcat.csv")
 storemod <- list()
@@ -113,9 +114,9 @@ eval_results <- function(true, predicted, df) {
 
 modelstore_releasetimes=list()
 r2list_releasetimes=list()
-ferret_list=c('F1702', 'F1815', 'F1803', 'F2002')
+ferret_list=c('F1702', 'F1815', 'F1803', 'F2002', 'F2105')
 
-for (i in 0:3) {
+for (i in 0:4) {
   print(i) 
   df_animal <- subset(dfsmall, ferret == i)
   #X = subset(df_animal, select = -c(realRelReleaseTimes) )
@@ -160,7 +161,7 @@ for (i in 0:3) {
 
 modelstore_correctresponse=list()
 r2list_correctresponse=list()
-for (i in 0:3) {
+for (i in 0:4) {
   print(i) 
   df_animal <- subset(dfcorrectresponse, ferret == i)
   #X = subset(df_animal, select = -c(correctresp) )
@@ -208,7 +209,7 @@ for (i in 0:3) {
 
 modelstore_falsealarm=list()
 r2list_falsealarm=list()
-for (i in 0:3) {
+for (i in 0:4) {
   print(i) 
   df_animal <- subset(df_falsealarm, ferret == i)
   X = subset(df_animal, select = -c(ferret) )
