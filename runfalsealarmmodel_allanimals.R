@@ -13,6 +13,8 @@ library(sjPlot)
 library(sjlabelled)
 library(sjmisc)
 library(ggplot2)
+library(modelsummary)
+
 
 
 
@@ -152,8 +154,9 @@ set_theme(base = theme_classic(), #To remove the background color and the grids
           axis.textsize.x = 1,  #To change x axis text size
           axis.textsize.y = 1)  #To change y axis text size
 
-forestplot <- plot_model(chosen_model,show.values = TRUE, value.offset = 0.5, title = 'Ranked features of the false alarm model')
-
+forestplot <- plot_model(chosen_model,show.values = TRUE, type = 're', value.offset = 0.5, title = 'Ranked features of the false alarm model')
+forestplot2 <- modelplot(chosen_model)
+  
 # Save the plot as a JPEG file
-ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/falsealarm_modelforestplot.png", plot = forestplot, width = 7, height = 10)
+ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/falsealarm_modelforestplot2.png", plot = forestplot2, width = 7, height = 10)
 dev.off()

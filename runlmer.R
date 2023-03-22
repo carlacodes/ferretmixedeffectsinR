@@ -8,11 +8,17 @@ library (ggplot2)
 library(extraoperators)
 library(JWileymisc)
 library(multilevelTools)
+library(dplyr)
 
 library(sjPlot)
 library(sjlabelled)
 library(sjmisc)
 library(ggplot2)
+library(coefplot)
+library(Hmisc)
+library(modelsummary)
+
+
 
 
 dfuse <- read.csv("dfuse.csv") 
@@ -21,6 +27,13 @@ dfcatuse <- read.csv("dfcat_use.csv")
 
 df <- read.csv("df.csv")
 dfcat <- read.csv("dfcat.csv")
+
+
+var.labels = c(pitchoftarg="Pitch of Target", stepval="Change in pitch from precursor to target", pastcatchtrial = "Trial n-1 was catch")
+
+label(df) = as.list(var.labels[match(names(df), names(var.labels))])
+label(df$pastcatchtrial)
+
 #run an anova to figure out the best variables to used for the random effects
 df$side=factor(df$side)
 df$pitchoftarg=factor(df$pitchoftarg)
@@ -32,6 +45,8 @@ df$pastcorrectresp = factor(df$pastcorrectresp)
 df$precur_and_targ_same = factor(df$precur_and_targ_same)
 
 df$realRelReleaseTimes = log(df$realRelReleaseTimes)
+
+
 
 ##fit individual model to each animal
 #look at reaction time mixed effects model in humans or any other types of studies 
@@ -119,7 +134,7 @@ modelreg_reduc9 <- lmer(
 anova(modelreg_reduc1, modelreg_reduc2, modelreg_reduc3, modelreg_reduc4, modelreg_reduc5, modelreg_reduc55,modelreg_reduc6,modelreg_reduc66, modelreg_reduc7, modelreg_reduc72, modelreg_reduc8, modelreg_reduc9)
 coeff=r2(modelreg_reduc66)
 #declare chosen model HERE:
-chosen_model <- modelreg_reduc5
+chosen_model <- modelreg_reduc66
 
 
 oneferret=subset(df, ferret == 1)
@@ -159,9 +174,105 @@ set_theme(base = theme_classic(), #To remove the background color and the grids
           axis.textsize.x = 1,  #To change x axis text size
           axis.textsize.y = 1)  #To change y axis text size
 
-forestplot <- plot_model(chosen_model,show.values = TRUE, value.offset = 0.5, title = 'Ranked features of the release times model for the subset of correct responses')
+list_of_coeffs <- coef(summary(chosen_model))
+
+estimates <- as.vector(list_of_coeffs[1:15,1])
+
+
+forestplot <- plot_model(chosen_model,show.values = TRUE, value.offset = 0.5, title = 'Ranked features of the release times model for the subset of correct responses') + 
+  scale_x_discrete(labels = c("pitch of target", "step value", "side", "AM", "past response was correct", "past trial was catch", 
+                                "precursor = target pitch", "ferret ID", "pitch of target = 109 Hz", "pitch of targ = 124 Hz", "pitch of target = 144 Hz", "pitch of target = 191 Hz", "pitch of target = 251 Hz", "low to high step in pitch"))
+
+forestplot <-plot_model(chosen_model)
+forestplot2 <- modelplot(chosen_model)
+
+
+library(ggplot2)
+library(gridExtra)
+library(modelplotr)
+library(lmerTest)
+library(grid)
+
+
+
+# Add the table to the forest plot using annotation_custom
+coef_table <- fixef(chosen_model)
+coef_table <- data.frame(coef_table, confint(chosen_model)[,1], confint(chosen_model)[,2])
+names(coef_table) <- c("Estimate", "CI_low", "CI_high")
+
+# Add SE column to the table
+coef_table$SE <- attr(summary(chosen_model)$coefficients, "std.err")
+#coef_table$Estimate <- round(coef_table$Estimate, 2)
+#
+# Create a transparent, rounded table grob
+coef_table <- coef_table[nrow(coef_table):1, ]
+
+table_grob <- tableGrob(
+  coef_table,
+  rows = NULL,
+  theme = ttheme_minimal(
+    base_size = 7,
+    padding = unit(c(2, 5), "mm"),
+    fg_params = list(hjust = 0, x = 0.1),
+    bg_params = list(fill = alpha("white", 0))
+  )
+)
+
+table_grob <- rev(table_grob)
+
+forestplot2 + annotation_custom(table_grob, xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf)
+
+
+# Extract coefficient table for fixed effects
+coef_table <- fixef(chosen_model)
+coef_table <- data.frame(coef_table, confint(chosen_model)[,1], confint(chosen_model)[,2])
+names(coef_table) <- c("Estimate", "CI_low", "CI_high")
+
+
+
+# Add SE column to the table
+coef_table$SE <- attr(summary(chosen_model)$coefficients, "std.err")
+
+# Add the table to the forest plot using annotation_custom
+table_grob <- tableGrob(coef_table, rows = NULL)
+
+table_format <- ttheme_default(base_size = 8, padding = unit(c(2, 2), "mm"))
+
+# Round table values to 2 decimal points
+coef_table[, 1:3] <- round(coef_table[, 1:3], 2)
+
+# Create table grob with formatted cells and transparent background
+table_grob <- tableGrob(
+  coef_table, rows = NULL,
+  theme = table_format, 
+  gp = gpar(fill = "transparent")
+)
+
+
+forestplot2 + annotation_custom(table_grob, xmin = -Inf, xmax = Inf, ymin = -Inf, ymax = Inf)
+
+forestplot3 <- coefplot(chosen_model, main = "Coefficients2", overlay = TRUE, overlay.text = (coef(chosen_model)))
+
 
 # Save the plot as a JPEG file
-ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/correctreleasetimes_modelforestplot.png", plot = forestplot, width = 7, height = 10)
+
+ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/correctreleasetimes_modelforestplot3.png", plot = forestplot, width = 7, height = 10)
+ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/correctreleasetimes_modelforestplot_original22.png", plot = forestplot2, width = 7, height = 10)
+
 dev.off()
 
+
+# set_theme(base = theme_classic(), #To remove the background color and the grids
+#           theme.font = 'serif',   #To change the font type
+#           title.size=1,
+#           axis.title.size = 0.5,  #To change axis title size
+#           axis.textsize.x = 1,  #To change x axis text size
+#           axis.textsize.y = 1)  #To change y axis text size
+# 
+# plot_data <- coef(chosen_model) %>%
+#   as.data.frame() %>%
+#   mutate(term = row.names(.))
+# 
+# ggplot(plot_data, aes(x = estimate, y = term)) +
+#   geom_point() +
+#   geom_errorbarh(aes(xminq
