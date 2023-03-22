@@ -119,6 +119,66 @@ coeff=r2(modelreg_reduc72)
 #declare chosen model HERE:
 chosen_model <- modelreg_reduc72
 
+set_theme(base = theme_classic(), #To remove the background color and the grids
+          theme.font = 'serif',   #To change the font type
+          title.size=1.5,
+          axis.title.size = 0.5,  #To change axis title size
+          axis.textsize.x = 1,  #To change x axis text size
+          axis.textsize.y = 1)  #To change y axis text size
+
+forestplot <- plot_model(chosen_model,show.values = TRUE, type = 're', value.offset = 0.5, title = 'Ranked features of the false alarm model')
+forestplot2 <- modelplot(chosen_model)
+
+forestplot2 <- modelplot(chosen_model) +theme(axis.title.x = element_text(size = 12, vjust = -0.5))+    aes(color = ifelse(p.value < 0.05, "Significant", "Not significant")) +
+  scale_color_manual(values = c("blue", "red"))
+
+
+
+library(ggplot2)
+library(gridExtra)
+library(modelplotr)
+library(lmerTest)
+library(grid)
+
+
+
+# Add the table to the forest plot using annotation_custom
+coef_table <- fixef(chosen_model)
+coef_table <-rev(coef_table)
+coef_table[] <- lapply(coef_table, function(x) if(is.numeric(x)) round(x, 3) else x)
+
+coef_table <- data.frame(coef_table, confint(chosen_model)[,1], confint(chosen_model)[,2])
+names(coef_table) <- c("Estimate", "CI_low", "CI_high")
+
+# Add SE column to the table
+coef_table$SE <- attr(summary(chosen_model)$coefficients, "std.err")
+#coef_table$Estimate <- round(coef_table$Estimate, 2)
+#
+# Create a transparent, rounded table grob
+coef_table <- coef_table[nrow(coef_table):1, ]
+
+table_grob <- tableGrob(
+  coef_table,
+  rows = NULL,
+  theme = ttheme_minimal(
+    base_size = 7,
+    padding = unit(c(2, 4.5), "mm"),
+    fg_params = list(hjust = 0, x = 0.1),
+    bg_params = list(fill = alpha("white", 0))
+  )
+)
+
+
+totalplot <- forestplot2  +labs(x = 'Coefficients',  y = 'Term names',  title = 'Coefficients for predicting a \n false alarm or hit response', color  = '') 
+
+
+ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/falsealarm_modelforestplot.png", plot = totalplot, width = 7, height = 10)
+  
+# Save the plot as a JPEG file
+ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/falsealarm_modelforestplot2.png", plot = forestplot2, width = 7, height = 10)
+dev.off()
+
+
 summary(chosen_model)
 oneferret=subset(df, ferret == 1)
 zoladata=subset(df, ferret==0)
@@ -147,16 +207,3 @@ abline(a=0, b=1)
 plot(as.numeric(unlist(macdata['falsealarm'])), macpred, main="Mac actual vs. predicted correct responses",
      xlab="actual ", ylab="predicted ", pch=19)
 abline(a=0, b=1)
-set_theme(base = theme_classic(), #To remove the background color and the grids
-          theme.font = 'serif',   #To change the font type
-          title.size=1.5,
-          axis.title.size = 0.5,  #To change axis title size
-          axis.textsize.x = 1,  #To change x axis text size
-          axis.textsize.y = 1)  #To change y axis text size
-
-forestplot <- plot_model(chosen_model,show.values = TRUE, type = 're', value.offset = 0.5, title = 'Ranked features of the false alarm model')
-forestplot2 <- modelplot(chosen_model)
-  
-# Save the plot as a JPEG file
-ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/falsealarm_modelforestplot2.png", plot = forestplot2, width = 7, height = 10)
-dev.off()

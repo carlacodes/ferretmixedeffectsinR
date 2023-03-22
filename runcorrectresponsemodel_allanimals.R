@@ -156,3 +156,49 @@ forestplot <- plot_model(chosen_model,show.values = TRUE, value.offset = 0.5, ti
 # Save the plot as a JPEG file
 ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/correctresponse_modelforestplot.png", plot = forestplot, width = 7, height = 10)
 dev.off()
+
+forestplot2 <- modelplot(chosen_model) +theme(axis.title.x = element_text(size = 12, vjust = -0.5))+
+  scale_color_manual(values = c("blue", "red"))
+
+
+
+library(ggplot2)
+library(gridExtra)
+library(modelplotr)
+library(lmerTest)
+library(grid)
+
+
+
+# Add the table to the forest plot using annotation_custom
+coef_table <- fixef(chosen_model)
+coef_table <-rev(coef_table)
+coef_table[] <- lapply(coef_table, function(x) if(is.numeric(x)) round(x, 3) else x)
+
+coef_table <- data.frame(coef_table, confint(chosen_model)[,1], confint(chosen_model)[,2])
+names(coef_table) <- c("Estimate", "CI_low", "CI_high")
+
+# Add SE column to the table
+coef_table$SE <- attr(summary(chosen_model)$coefficients, "std.err")
+#coef_table$Estimate <- round(coef_table$Estimate, 2)
+#
+# Create a transparent, rounded table grob
+coef_table <- coef_table[nrow(coef_table):1, ]
+
+table_grob <- tableGrob(
+  coef_table,
+  rows = NULL,
+  theme = ttheme_minimal(
+    base_size = 7,
+    padding = unit(c(2, 4.5), "mm"),
+    fg_params = list(hjust = 0, x = 0.1),
+    bg_params = list(fill = alpha("white", 0))
+  )
+)
+
+
+totalplot <- forestplot2  +labs(x = 'Coefficients',  y = 'Term names',  title = 'Coefficients for reaction times for predicting a hit or miss', color  = '') 
+
+
+ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/correctresponses_modelforestplot_original22.png", plot = totalplot, width = 7, height = 10)
+
