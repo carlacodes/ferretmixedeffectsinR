@@ -179,19 +179,19 @@ list_of_coeffs <- coef(summary(chosen_model))
 estimates <- as.vector(list_of_coeffs[1:15,1])
 
 
-forestplot <- plot_model(chosen_model,show.values = TRUE, title = 'Ranked features of the release times model for the subset of correct responses') + 
-  scale_x_discrete(labels = c("pitch of target", "step value", "side", "AM", "past response was correct", "past trial was catch", 
-                                "precursor = target pitch", "ferret ID", "pitch of target = 109 Hz", "pitch of targ = 124 Hz", "pitch of target = 144 Hz", "pitch of target = 191 Hz", "pitch of target = 251 Hz", "low to high step in pitch"))
+forestplot <- plot_model(chosen_model,show.values = TRUE, title = 'Ranked features of the release times model for the subset of correct responses') 
+# + scale_x_discrete(labels = c("pitch of target", "step value", "side", "AM", "past response was correct", "past trial was catch", 
+#                                 "precursor = target pitch", "ferret ID", "pitch of target = 109 Hz", "pitch of targ = 124 Hz", "pitch of target = 144 Hz", "pitch of target = 191 Hz", "pitch of target = 251 Hz", "low to high step in pitch"))
 
 forestplot <-plot_model(chosen_model)
 forestplot2 <- modelplot(chosen_model) +theme(axis.title.x = element_text(size = 12, vjust = -0.5))+ scale_y_discrete(
-                                                            labels = c("pitch = 124 Hz", "pitch = 144 Hz", "pitch of target = 191 Hz",
+                                                            labels = c("Intercept", "pitch = 124 Hz", "pitch = 144 Hz", "pitch of target = 191 Hz",
                                                                        "pitch of target = 251 Hz", "high to low step", "low to high step in pitch",
                                                                        "female talker", "right side", "time to target presentation", "AM session",
                                                                        "trial number", "past trial was correct", "past trial was catch",
-                                                                       "pitch of precursor = target", ""))+   aes(color = ifelse(p.value < 0.05, "Significant", "Not significant")) +
-  scale_color_manual(values = c("blue", "red"))
+                                                                       "pitch of precursor = target"))+   aes(color = ifelse(p.value < 0.05, "Significant", "Not significant")) + scale_color_manual(values = c("blue", "red"))
 
+# forestplot2 <- modelplot(chosen_model) +theme(axis.title.x = element_text(size = 12, vjust = -0.5))+   aes(color = ifelse(p.value < 0.05, "Significant", "Not significant")) + scale_color_manual(values = c("blue", "red"))
 
 
 library(ggplot2)
@@ -232,9 +232,8 @@ table_grob <- tableGrob(
 totalplot <- forestplot2  +labs(x = 'Coefficients',  y = 'Term names',  title = 'Coefficients for reaction times for correct responses', color  = '') 
 
 
-ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/correctreleasetimes_modelforestplot_original22.png", plot = totalplot, width = 7, height = 10)
+ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/correctreleasetimes_modelforestplot_original23.png", plot = totalplot, width = 7, height = 10)
 
-dev.off()
 
 
 # set_theme(base = theme_classic(), #To remove the background color and the grids

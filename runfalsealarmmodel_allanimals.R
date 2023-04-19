@@ -129,10 +129,12 @@ set_theme(base = theme_classic(), #To remove the background color and the grids
 forestplot <- plot_model(chosen_model,show.values = TRUE, type = 're', value.offset = 0.5, title = 'Ranked features of the false alarm model')
 forestplot2 <- modelplot(chosen_model)
 
-forestplot2 <- modelplot(chosen_model) +theme(axis.title.x = element_text(size = 12, vjust = -0.5))+    aes(color = ifelse(p.value < 0.05, "Significant", "Not significant")) +
+forestplot2 <- modelplot(chosen_model) +theme(axis.title.x = element_text(size = 12, vjust = -0.5))+    scale_y_discrete(
+  labels = rev(c("pitch = 251 Hz * intra trial roving", "pitch = 191 Hz * intra trial roving", "pitch = 144 Hz * intra trial roving",
+                 "pitch = 124 Hz * intra rove",  "pitch = 191 Hz * positive pitch change ", "pitch = 124 Hz * pos. pitch change ", "pitch = 251 Hz * no pitch change", "pitch = 191 hz * no pitch change", "pitch = 144 Hz * no pitch change", 
+                 "pitch = 124 Hz * no pitch change", "past trial catch", "past response correct", "trial number", "target presentation time", "presentation from right side", "intra-roved trial", "pos.change in pitch", 
+                 "no change in pitch", "pitch = 251 Hz", "pitch = 191 Hz", "pitch = 144 Hz", "pitch = 124Hz", "Intercept"))) + aes(color = ifelse(p.value < 0.05, "Significant", "Not significant")) +
   scale_color_manual(values = c("blue", "red"))
-
-
 
 library(ggplot2)
 library(gridExtra)

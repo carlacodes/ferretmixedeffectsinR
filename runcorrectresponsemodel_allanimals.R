@@ -111,7 +111,7 @@ modelreg_reduc10 <- lmer(
   data=df, REML = FALSE)
 
 anova(modelreg_reduc1, modelreg_reduc2, modelreg_reduc3, modelreg_reduc4, modelreg_reduc5, modelreg_reduc55,modelreg_reduc6,modelreg_reduc66, modelreg_reduc7,modelreg_reduc72, modelreg_reduc8, modelreg_reduc9, modelreg_reduc10)
-coeff=r2(modelreg_reduc66)
+coeff=r2(modelreg_reduc4)
 #declare chosen model HERE:
 chosen_model <- modelreg_reduc4
 
@@ -155,10 +155,12 @@ forestplot <- plot_model(chosen_model,show.values = TRUE, value.offset = 0.5, ti
 
 # Save the plot as a JPEG file
 ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/correctresponse_modelforestplot22.png", plot = forestplot, width = 7, height = 10)
-dev.off()
 
-forestplot2 <- modelplot(chosen_model) +theme(axis.title.x = element_text(size = 12, vjust = -0.5))+
-  scale_color_manual(values = c("blue", "red"))
+# forestplot2 <- modelplot(chosen_model) +theme(axis.title.x = element_text(size = 12, vjust = -0.5))+   aes(color = ifelse(p.value < 0.05, "Significant", "Not significant")) + scale_color_manual(values = c("blue", "red"))
+
+
+forestplot2 <- modelplot(chosen_model) +theme(axis.title.x = element_text(size = 12, vjust = -0.5))+   scale_y_discrete(
+  labels = rev(c("past trial was catch", "past response was correct", "trial Number", "right side", "pos. change in pitch", "no change in pitch", "pitch = 251 Hz", "pitch = 191 Hz", "pitch = 144 Hz", "pitch = 124 Hz", "pitch = 109 Hz")))+   aes(color = ifelse(p.value < 0.05, "Significant", "Not significant")) + scale_color_manual(values = c("blue", "red"))
 
 
 
@@ -197,8 +199,9 @@ table_grob <- tableGrob(
 )
 
 
-totalplot <- forestplot2  +labs(x = 'Coefficients',  y = 'Term names',  title = 'Coefficients for reaction times for predicting a hit or miss', color  = '') 
+totalplot <- forestplot2  +labs(x = 'Coefficient value',  y = 'Coefficient name',  title = 'Coefficients for model predicting a hit or miss', color  = '') 
 
 
-ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/correctresponses_modelforestplot_original22.png", plot = totalplot, width = 7, height = 10)
+ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/correctresponses_14082023.png", plot = totalplot, width = 7, height = 10)
+dev.off()
 
