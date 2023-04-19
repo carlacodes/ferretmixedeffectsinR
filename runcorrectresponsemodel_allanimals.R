@@ -154,7 +154,7 @@ set_theme(base = theme_classic(), #To remove the background color and the grids
 forestplot <- plot_model(chosen_model,show.values = TRUE, value.offset = 0.5, title = 'Ranked features of the correct response model')
 
 # Save the plot as a JPEG file
-ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/correctresponse_modelforestplot.png", plot = forestplot, width = 7, height = 10)
+ggsave(filename = "D:/behavmodelfigs/mixedeffectsmodels/correctresponse_modelforestplot22.png", plot = forestplot, width = 7, height = 10)
 dev.off()
 
 forestplot2 <- modelplot(chosen_model) +theme(axis.title.x = element_text(size = 12, vjust = -0.5))+
