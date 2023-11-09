@@ -68,51 +68,51 @@ anova (nullmodel1, nullmodel2, nullmodel3, nullmodel4, nullmodel5, nullmodel6, n
 #now adding fixed effects 
 modelreg_reduc1 <- glmer(
   falsealarm ~ pitchoftarg+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE )#control = lmerControl(optimizer ="Nelder_Mead")
+  data=df, family=binomial )#control = lmerControl(optimizer ="Nelder_Mead")
 
 modelreg_reduc2 <- glmer(
   falsealarm ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE,)
+  data=df, family=binomial,)
 
 modelreg_reduc3 <- glmer(
   falsealarm ~ pitchoftarg+stepval+talker+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE,)
+  data=df, family=binomial,)
 
 modelreg_reduc4 <- glmer(
   falsealarm ~ pitchoftarg+stepval+talker+side+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE, )
+  data=df, family=binomial, )
 
 modelreg_reduc5 <- glmer(
   falsealarm ~ pitchoftarg+stepval+talker+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE)
+  data=df, family=binomial)
 
 modelreg_reduc55 <- glmer(
   falsealarm ~ pitchoftarg*stepval+talker*stepval+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = TRUE)
+  data=df, family=binomial)
 
 modelreg_reduc66 <- glmer(
   falsealarm ~ pitchoftarg+stepval+talker+side+targTimes+AM+trialNum+pastcorrectresp+pastcatchtrial+intra_trial_roving+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE)
+  data=df, family=binomial)
 modelreg_reduc6 <- glmer(
   falsealarm ~ pitchoftarg+stepval+talker+side+targTimes+AM+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE)
+  data=df, family=binomial)
 # talker*(pitchoftarg)+side + talker*stepval+targTimes
 modelreg_reduc7 <- glmer(
   falsealarm ~ pitchoftarg*stepval+talker*pitchoftarg+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE)
+  data=df, family=binomial)
 modelreg_reduc72 <- glmer(
   falsealarm ~ pitchoftarg*stepval+talker*pitchoftarg+pitchoftarg*intra_trial_roving+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE)
+  data=df, family=binomial)
 
 modelreg_reduc8 <- glmer(
   falsealarm ~ pitchoftarg*stepval+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE)
+  data=df, family=binomial)
 modelreg_reduc9 <- glmer(
   falsealarm ~ pitchoftarg*stepval*talker+trialNum+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE)
+  data=df, family=binomial)
 modelreg_reduc10 <- glmer(
   falsealarm ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+intra_trial_roving+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE)
+  data=df, family=binomial)
 
 anova(modelreg_reduc1, modelreg_reduc2, modelreg_reduc3, modelreg_reduc4, modelreg_reduc5, modelreg_reduc55,modelreg_reduc6,modelreg_reduc66, modelreg_reduc7,modelreg_reduc72, modelreg_reduc8, modelreg_reduc9, modelreg_reduc10)
 coeff=r2(modelreg_reduc72)
@@ -187,7 +187,28 @@ zoladata=subset(df, ferret==0)
 tinadata=subset(df, ferret==2)
 macdata=subset(df, ferret==3)
 cruellact=oneferret['falsealarm']
+library(glmmTMB)
+library(pROC)
+library(caret)
+allpred = predict(chosen_model, df, type='response')
+auc(roc(response = df$falsealarm, predictor = allpred))
+s <- simulate(chosen_model)
+# proportion of response values that equal simulated responses
+mean(df$falsealarm == s)
+threshold <- 0.5
+s_binary <- ifelse(s >= threshold, 1, 0)
 
+# Create a confusion matrix
+conf_matrix <- confusionMatrix(data = factor(s_binary), reference = factor(df$falsealarm))
+
+# Print the confusion matrix
+print(conf_matrix)
+png('D:\behavmodelfigs\mixedeffectsmodels/confusionmatrix_FAmodel.png')
+fourfoldplot(as.table(conf_matrix),color=c("green","red"),main = "Confusion Matrix")
+dev.off()
+
+# Visualize the confusion matrix
+confusionMatrixPlot(conf_matrix)
 cruellapred=predict(chosen_model, oneferret, type='response')
 zolapred=predict(chosen_model, zoladata, type='response')
 tinapred=predict(chosen_model, tinadata, type='response')

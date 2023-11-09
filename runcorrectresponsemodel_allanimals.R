@@ -29,86 +29,87 @@ df$pastcatchtrial=factor(df$pastcatchtrial)
 df$pastcorrectresp = factor(df$pastcorrectresp)
 df$precur_and_targ_same = factor(df$precur_and_targ_same)
 
-
+unique_values_response <- unique(df$response)
+print(unique_values_response)
 ##fit individual model to each animal
 #look at reaction time mixed effects model in humans or any other types of studies 
-nullmodel1 <- lmer( correctresp ~ 1 + (1|ferret), data = df, REML=FALSE)
-nullmodel2 <- lmer( correctresp ~ 1 + (1 + pastcorrectresp |ferret), data = df, REML=FALSE)
-nullmodel22 <- lmer( correctresp ~ 1 + (1 + pastcorrectresp |ferret)+(1 + trialNum |ferret), data = df, REML=FALSE)
+nullmodel1 <- glmer( correctresp ~ 1 + (1|ferret), data = df, family=binomial)
+nullmodel2 <- glmer( correctresp ~ 1 + (1 + pastcorrectresp |ferret), data = df, family=binomial)
+nullmodel22 <- glmer( correctresp ~ 1 + (1 + pastcorrectresp |ferret)+(1 + trialNum |ferret), data = df, family=binomial)
 
-nullmodel3 <- lmer( correctresp ~ 1 +(1 +pastcorrectresp+pastcatchtrial |ferret), data = df, REML=FALSE)
+nullmodel3 <- glmer( correctresp ~ 1 +(1 +pastcorrectresp+pastcatchtrial |ferret), data = df, family=binomial)
 
-nullmodel4 <- lmer( correctresp ~ 1 +(0 +pastcorrectresp |ferret), data = df, REML=FALSE)
+nullmodel4 <- glmer( correctresp ~ 1 +(0 +pastcorrectresp |ferret), data = df, family=binomial)
 
-nullmodel5 <- lmer( correctresp ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret), data = df, REML=FALSE)
-nullmodel6 <- lmer( correctresp ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret)+(0 +trialNum |ferret), data = df, REML=FALSE)
+nullmodel5 <- glmer( correctresp ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret), data = df, family=binomial)
+nullmodel6 <- glmer( correctresp ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret)+(0 +trialNum |ferret), data = df, family=binomial)
 
-nullmodel7 <- lmer( correctresp ~ 1 + (talker+timeToTarget+side |ferret), data = df, REML=FALSE)
-nullmodel8 <- lmer( correctresp ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +AM |ferret), data = df, REML=FALSE)
-nullmodel9<- lmer( correctresp ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +AM |ferret)+(0+precur_and_targ_same|ferret), data = df, REML=FALSE)
-nullmodel10 <- lmer( correctresp ~ 1 + (talker+timeToTarget+side+precur_and_targ_same |ferret), data = df, REML=FALSE)
+nullmodel7 <- glmer( correctresp ~ 1 + (talker+timeToTarget+side |ferret), data = df, family=binomial)
+nullmodel8 <- glmer( correctresp ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +AM |ferret), data = df, family=binomial)
+nullmodel9<- glmer( correctresp ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +AM |ferret)+(0+precur_and_targ_same|ferret), data = df, family=binomial)
+nullmodel10 <- glmer( correctresp ~ 1 + (talker+timeToTarget+side+precur_and_targ_same |ferret), data = df, family=binomial)
 
-nullmodel72 <- lmer( correctresp ~ 1 + (talker |ferret), data = df, REML=FALSE)
-nullmodel73 <- lmer( correctresp ~ 1 + (talker+precur_and_targ_same |ferret), data = df, REML=FALSE)
-nullmodel74 <- lmer( correctresp ~ 1 + (precur_and_targ_same |ferret), data = df, REML=FALSE)
-nullmodel75 <- lmer( correctresp ~ 1 + (precur_and_targ_same+side |ferret), data = df, REML=FALSE)
-nullmodel76 <- lmer( correctresp ~ 1 + (side |ferret), data = df, REML=FALSE)
-nullmodel77 <- lmer( correctresp ~ 1 + (talker+side |ferret), data = df, REML=FALSE)
-nullmodel78 <- lmer( correctresp ~ 1 + (talker+targTimes |ferret), data = df, REML=FALSE)
-nullmodel79 <- lmer( correctresp ~ 1 + (targTimes |ferret), data = df, REML=FALSE)
+nullmodel72 <- glmer( correctresp ~ 1 + (talker |ferret), data = df, family=binomial)
+nullmodel73 <- glmer( correctresp ~ 1 + (talker+precur_and_targ_same |ferret), data = df, family=binomial)
+nullmodel74 <- glmer( correctresp ~ 1 + (precur_and_targ_same |ferret), data = df, family=binomial)
+nullmodel75 <- glmer( correctresp ~ 1 + (precur_and_targ_same+side |ferret), data = df, family=binomial)
+nullmodel76 <- glmer( correctresp ~ 1 + (side |ferret), data = df, family=binomial)
+nullmodel77 <- glmer( correctresp ~ 1 + (talker+side |ferret), data = df, family=binomial)
+nullmodel78 <- glmer( correctresp ~ 1 + (talker+targTimes |ferret), data = df, family=binomial)
+nullmodel79 <- glmer( correctresp ~ 1 + (targTimes |ferret), data = df, family=binomial)
 anova (nullmodel1, nullmodel2, nullmodel3, nullmodel4, nullmodel5, nullmodel6, nullmodel7,nullmodel72, nullmodel73, nullmodel74, nullmodel75, nullmodel76,nullmodel77, nullmodel78, nullmodel79, nullmodel8, nullmodel22, nullmodel9, nullmodel10)
 
 
 
 
 #now adding fixed effects 
-modelreg_reduc1 <- lmer(
+modelreg_reduc1 <- glmer(
   correctresp ~ pitchoftarg+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE, )#control = lmerControl(optimizer ="Nelder_Mead")
+  data=df, family=binomial, )#control = lmerControl(optimizer ="Nelder_Mead")
 
-modelreg_reduc2 <- lmer(
+modelreg_reduc2 <- glmer(
   correctresp ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE,)
+  data=df, family=binomial,)
 
-modelreg_reduc3 <- lmer(
+modelreg_reduc3 <- glmer(
   correctresp ~ pitchoftarg+stepval+talker+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE,)
+  data=df, family=binomial,)
 
-modelreg_reduc4 <- lmer(
+modelreg_reduc4 <- glmer(
   correctresp ~ pitchoftarg+stepval+talker+side+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE, )
+  data=df, family=binomial, )
 
-modelreg_reduc5 <- lmer(
+modelreg_reduc5 <- glmer(
   correctresp ~ pitchoftarg+stepval+talker+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE)
+  data=df, family=binomial)
 
-modelreg_reduc55 <- lmer(
+modelreg_reduc55 <- glmer(
   correctresp ~ pitchoftarg*stepval+talker*stepval+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = TRUE)
+  data=df, family=binomial)
 
-modelreg_reduc66 <- lmer(
+modelreg_reduc66 <- glmer(
   correctresp ~ pitchoftarg+stepval+talker+side+timeToTarget+AM+trialNum+pastcorrectresp+pastcatchtrial+precur_and_targ_same+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE)
-modelreg_reduc6 <- lmer(
+  data=df, family=binomial)
+modelreg_reduc6 <- glmer(
   correctresp ~ pitchoftarg+stepval+talker+side+timeToTarget+AM+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE)
+  data=df, family=binomial)
 # talker*(pitchoftarg)+side + talker*stepval+timeToTarget
-modelreg_reduc7 <- lmer(
+modelreg_reduc7 <- glmer(
   correctresp ~ pitchoftarg*stepval+talker*pitchoftarg+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE)
-modelreg_reduc72 <- lmer(
+  data=df, family=binomial)
+modelreg_reduc72 <- glmer(
   correctresp ~ pitchoftarg*stepval+talker*pitchoftarg+pitchoftarg*precur_and_targ_same+side+timeToTarget+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE)
+  data=df, family=binomial)
 
-modelreg_reduc8 <- lmer(
+modelreg_reduc8 <- glmer(
   correctresp ~ pitchoftarg*stepval+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE)
-modelreg_reduc9 <- lmer(
+  data=df, family=binomial)
+modelreg_reduc9 <- glmer(
   correctresp ~ pitchoftarg*stepval*talker+trialNum+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE)
-modelreg_reduc10 <- lmer(
+  data=df, family=binomial)
+modelreg_reduc10 <- glmer(
   correctresp ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+precur_and_targ_same+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE)
+  data=df, family=binomial)
 
 anova(modelreg_reduc1, modelreg_reduc2, modelreg_reduc3, modelreg_reduc4, modelreg_reduc5, modelreg_reduc55,modelreg_reduc6,modelreg_reduc66, modelreg_reduc7,modelreg_reduc72, modelreg_reduc8, modelreg_reduc9, modelreg_reduc10)
 coeff=r2(modelreg_reduc4)
@@ -127,22 +128,25 @@ zolapred=predict(chosen_model, zoladata, type='response')
 tinapred=predict(chosen_model, tinadata, type='response')
 macpred=predict(chosen_model, macdata, type='response')
 
-
-plot(as.numeric(unlist(oneferret['correctresp'])), cruellapred, main="Cruella actual vs. predicted correct responses",
+png(filename="D:/behavmodelfigs/mixedeffectsmodels/originalvspredicted_CR_or_not_ontargettrials_F1815.png")
+plot(as.numeric(unlist(oneferret['correctresp'])), cruellapred, main="Cruella actual vs. predicted responses for the CR/miss model",
      xlab="actual ", ylab="predicted ", pch=19)
-abline(a=0, b=1)
+dev.off()
 
-plot(as.numeric(unlist(zoladata['correctresp'])), zolapred, main="Zola actual vs. predicted correct responses",
-     xlab="actual ", ylab="predicted ", pch=19)
-abline(a=0, b=1)
+png(filename="D:/behavmodelfigs/mixedeffectsmodels/originalvspredicted_CR_or_not_ontargettrial_F1702.png")
+plot(as.numeric(unlist(zoladata['correctresp'])), zolapred, main="Zola actual vs. predicted responses for the CR/miss model",
+     xlab="actual ", ylab="predicted ", pch=19)#
+dev.off()
 
-plot(as.numeric(unlist(tinadata['correctresp'])), tinapred, main="Tina actual vs. predicted correct responses",
+png(filename="D:/behavmodelfigs/mixedeffectsmodels/originalvspredicted_CR_or_not_ontargettrial_F1803.png")
+plot(as.numeric(unlist(tinadata['correctresp'])), tinapred, main="Tina actual vs. predicted responses for the CR/miss model",
      xlab="actual ", ylab="predicted ", pch=19)
-abline(a=0, b=1)
+dev.off()
 
-plot(as.numeric(unlist(macdata['correctresp'])), macpred, main="Mac actual vs. predicted correct responses",
+png(filename="D:/behavmodelfigs/mixedeffectsmodels/originalvspredicted_CR_or_not_ontargettrial_F2002.png")
+plot(as.numeric(unlist(macdata['correctresp'])), macpred, main="Mac actual vs. predicted responses for the CR/miss model",
      xlab="actual ", ylab="predicted ", pch=19)
-abline(a=0, b=1)
+dev.off()
 
 set_theme(base = theme_classic(), #To remove the background color and the grids
           theme.font = 'serif',   #To change the font type
