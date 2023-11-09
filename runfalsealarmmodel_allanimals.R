@@ -66,6 +66,8 @@ anova (nullmodel1, nullmodel2, nullmodel3, nullmodel4, nullmodel5, nullmodel6, n
 
 
 #now adding fixed effects 
+
+
 modelreg_reduc1 <- glmer(
   falsealarm ~ pitchoftarg+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, family=binomial )#control = lmerControl(optimizer ="Nelder_Mead")

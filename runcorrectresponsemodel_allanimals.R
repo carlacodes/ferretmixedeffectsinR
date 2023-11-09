@@ -117,6 +117,21 @@ coeff=r2(modelreg_reduc4)
 chosen_model <- modelreg_reduc4
 
 
+s <- simulate(chosen_model)
+# proportion of response values that equal simulated responses
+mean(df$correctresp == s)
+threshold <- 0.5
+s_binary <- ifelse(s >= threshold, 1, 0)
+
+# Create a confusion matrix
+conf_matrix <- confusionMatrix(data = factor(s_binary), reference = factor(df$falsealarm))
+
+# Print the confusion matrix
+print(conf_matrix)
+png('D:\behavmodelfigs\mixedeffectsmodels/confusionmatrix_correctresponsemodel.png')
+fourfoldplot(as.table(conf_matrix),color=c("purple","red"),main = "Confusion Matrix for the Correct Response/Miss Model")
+dev.off()
+
 oneferret=subset(df, ferret == 1)
 zoladata=subset(df, ferret==0)
 tinadata=subset(df, ferret==2)
