@@ -34,31 +34,31 @@ df$intra_trial_roving = factor(df$intra_trial_roving)
 
 ##fit individual model to each animal
 #look at reaction time mixed effects model in humans or any other types of studies 
-nullmodel1 <- lmer( falsealarm ~ 1 + (1|ferret), data = df, REML=FALSE)
-nullmodel2 <- lmer( falsealarm ~ 1 + (1 + pastcorrectresp |ferret), data = df, REML=FALSE)
-nullmodel22 <- lmer( falsealarm ~ 1 + (1 + pastcorrectresp |ferret)+(1 + trialNum |ferret), data = df, REML=FALSE)
+nullmodel1 <- glmer( falsealarm ~ 1 + (1|ferret), data = df, family=binomial)
+nullmodel2 <- glmer( falsealarm ~ 1 + (1 + pastcorrectresp |ferret), data = df, family=binomial)
+nullmodel22 <- glmer( falsealarm ~ 1 + (1 + pastcorrectresp |ferret)+(1 + trialNum |ferret), data = df, family=binomial)
 
-nullmodel3 <- lmer( falsealarm ~ 1 +(1 +pastcorrectresp+pastcatchtrial |ferret), data = df, REML=FALSE)
+nullmodel3 <- glmer( falsealarm ~ 1 +(1 +pastcorrectresp+pastcatchtrial |ferret), data = df, family=binomial)
 
-nullmodel4 <- lmer( falsealarm ~ 1 +(0 +pastcorrectresp |ferret), data = df, REML=FALSE)
+nullmodel4 <- glmer( falsealarm ~ 1 +(0 +pastcorrectresp |ferret), data = df, family=binomial)
 
-nullmodel5 <- lmer( falsealarm ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret), data = df, REML=FALSE)
-nullmodel6 <- lmer( falsealarm ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret)+(0 +trialNum |ferret), data = df, REML=FALSE)
+nullmodel5 <- glmer( falsealarm ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret), data = df, family=binomial)
+nullmodel6 <- glmer( falsealarm ~ 1 + (0 +pastcorrectresp |ferret)+(0 +talker |ferret)+(0 +trialNum |ferret), data = df, family=binomial)
 
-nullmodel7 <- lmer( falsealarm ~ 1 + (talker+targTimes+side |ferret), data = df, REML=FALSE)
-nullmodel8 <- lmer( falsealarm ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +AM |ferret), data = df, REML=FALSE)
-nullmodel9<- lmer( falsealarm ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +AM |ferret)+(0+intra_trial_roving|ferret), data = df, REML=FALSE)
-nullmodel10 <- lmer( falsealarm ~ 1 + (talker+targTimes+side+intra_trial_roving |ferret), data = df, REML=FALSE)
+nullmodel7 <- glmer( falsealarm ~ 1 + (talker+targTimes+side |ferret), data = df, family=binomial)
+nullmodel8 <- glmer( falsealarm ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +AM |ferret), data = df, family=binomial)
+nullmodel9<- glmer( falsealarm ~ 1 + (0 +side |ferret)+(0 +talker |ferret)+(0 +AM |ferret)+(0+intra_trial_roving|ferret), data = df, family=binomial)
+nullmodel10 <- glmer( falsealarm ~ 1 + (talker+targTimes+side+intra_trial_roving |ferret), data = df, family=binomial)
 
 
-nullmodel72 <- lmer( falsealarm ~ 1 + (talker |ferret), data = df, REML=FALSE)
-nullmodel73 <- lmer( falsealarm ~ 1 + (talker+intra_trial_roving |ferret), data = df, REML=FALSE)
-nullmodel74 <- lmer( falsealarm ~ 1 + (intra_trial_roving |ferret), data = df, REML=FALSE)
-nullmodel75 <- lmer( falsealarm ~ 1 + (intra_trial_roving+side |ferret), data = df, REML=FALSE)
-nullmodel76 <- lmer( falsealarm ~ 1 + (side |ferret), data = df, REML=FALSE)
-nullmodel77 <- lmer( falsealarm ~ 1 + (talker+side |ferret), data = df, REML=FALSE)
-nullmodel78 <- lmer( falsealarm ~ 1 + (talker+targTimes |ferret), data = df, REML=FALSE)
-nullmodel79 <- lmer( falsealarm ~ 1 + (targTimes |ferret), data = df, REML=FALSE)
+nullmodel72 <- glmer( falsealarm ~ 1 + (talker |ferret), data = df, family=binomial)
+nullmodel73 <- glmer( falsealarm ~ 1 + (talker+intra_trial_roving |ferret), data = df, family=binomial)
+nullmodel74 <- glmer( falsealarm ~ 1 + (intra_trial_roving |ferret), data = df, family=binomial)
+nullmodel75 <- glmer( falsealarm ~ 1 + (intra_trial_roving+side |ferret), data = df, family=binomial)
+nullmodel76 <- glmer( falsealarm ~ 1 + (side |ferret), data = df, family=binomial)
+nullmodel77 <- glmer( falsealarm ~ 1 + (talker+side |ferret), data = df, family=binomial)
+nullmodel78 <- glmer( falsealarm ~ 1 + (talker+targTimes |ferret), data = df, family=binomial)
+nullmodel79 <- glmer( falsealarm ~ 1 + (targTimes |ferret), data = df, family=binomial)
 
 
 anova (nullmodel1, nullmodel2, nullmodel3, nullmodel4, nullmodel5, nullmodel6, nullmodel7,nullmodel72, nullmodel73, nullmodel74, nullmodel75, nullmodel76,nullmodel77, nullmodel78, nullmodel79, nullmodel8, nullmodel22, nullmodel9, nullmodel10)
@@ -66,51 +66,51 @@ anova (nullmodel1, nullmodel2, nullmodel3, nullmodel4, nullmodel5, nullmodel6, n
 
 
 #now adding fixed effects 
-modelreg_reduc1 <- lmer(
+modelreg_reduc1 <- glmer(
   falsealarm ~ pitchoftarg+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
-  data=df, REML = FALSE, )#control = lmerControl(optimizer ="Nelder_Mead")
+  data=df, REML = FALSE )#control = lmerControl(optimizer ="Nelder_Mead")
 
-modelreg_reduc2 <- lmer(
+modelreg_reduc2 <- glmer(
   falsealarm ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE,)
 
-modelreg_reduc3 <- lmer(
+modelreg_reduc3 <- glmer(
   falsealarm ~ pitchoftarg+stepval+talker+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE,)
 
-modelreg_reduc4 <- lmer(
+modelreg_reduc4 <- glmer(
   falsealarm ~ pitchoftarg+stepval+talker+side+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE, )
 
-modelreg_reduc5 <- lmer(
+modelreg_reduc5 <- glmer(
   falsealarm ~ pitchoftarg+stepval+talker+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE)
 
-modelreg_reduc55 <- lmer(
+modelreg_reduc55 <- glmer(
   falsealarm ~ pitchoftarg*stepval+talker*stepval+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = TRUE)
 
-modelreg_reduc66 <- lmer(
+modelreg_reduc66 <- glmer(
   falsealarm ~ pitchoftarg+stepval+talker+side+targTimes+AM+trialNum+pastcorrectresp+pastcatchtrial+intra_trial_roving+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE)
-modelreg_reduc6 <- lmer(
+modelreg_reduc6 <- glmer(
   falsealarm ~ pitchoftarg+stepval+talker+side+targTimes+AM+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE)
 # talker*(pitchoftarg)+side + talker*stepval+targTimes
-modelreg_reduc7 <- lmer(
+modelreg_reduc7 <- glmer(
   falsealarm ~ pitchoftarg*stepval+talker*pitchoftarg+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE)
-modelreg_reduc72 <- lmer(
+modelreg_reduc72 <- glmer(
   falsealarm ~ pitchoftarg*stepval+talker*pitchoftarg+pitchoftarg*intra_trial_roving+side+targTimes+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE)
 
-modelreg_reduc8 <- lmer(
+modelreg_reduc8 <- glmer(
   falsealarm ~ pitchoftarg*stepval+trialNum+pastcorrectresp+pastcatchtrial+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE)
-modelreg_reduc9 <- lmer(
+modelreg_reduc9 <- glmer(
   falsealarm ~ pitchoftarg*stepval*talker+trialNum+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE)
-modelreg_reduc10 <- lmer(
+modelreg_reduc10 <- glmer(
   falsealarm ~ pitchoftarg+stepval+trialNum+pastcorrectresp+pastcatchtrial+intra_trial_roving+(1 + pastcorrectresp |ferret),
   data=df, REML = FALSE)
 
