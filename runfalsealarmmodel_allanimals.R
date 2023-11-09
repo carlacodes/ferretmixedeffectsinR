@@ -193,19 +193,23 @@ zolapred=predict(chosen_model, zoladata, type='response')
 tinapred=predict(chosen_model, tinadata, type='response')
 macpred=predict(chosen_model, macdata, type='response')
 
-
-plot(as.numeric(unlist(oneferret['falsealarm'])), cruellapred, main="Cruella actual vs. predicted correct responses",
+png(filename="D:/behavmodelfigs/mixedeffectsmodels/originalvspredicted_FAmodel_F1815.png")
+plot(as.numeric(unlist(oneferret['falsealarm'])), cruellapred, main="Cruella actual vs. predicted FA or not model",
      xlab="actual ", ylab="predicted ", pch=19)
-abline(a=0, b=1)
+dev.off()
 
-plot(as.numeric(unlist(zoladata['falsealarm'])), zolapred, main="Zola actual vs. predicted correct responses",
+png(filename="D:/behavmodelfigs/mixedeffectsmodels/originalvspredicted_FAmodel_F1702.png")
+plot(as.numeric(unlist(zoladata['falsealarm'])), zolapred, main="Zola actual vs. predicted FA or not model",
      xlab="actual ", ylab="predicted ", pch=19)
-abline(a=0, b=1)
+dev.off()
 
-plot(as.numeric(unlist(tinadata['falsealarm'])), tinapred, main="Tina actual vs. predicted correct responses",
+png(filename="D:/behavmodelfigs/mixedeffectsmodels/originalvspredicted_FAmodel_F1803.png")
+plot(as.numeric(unlist(tinadata['falsealarm'])), tinapred, main="Tina actual vs. predicted FA or not model",
      xlab="actual ", ylab="predicted ", pch=19)
-abline(a=0, b=1)
+dev.off()
 
-plot(as.numeric(unlist(macdata['falsealarm'])), macpred, main="Mac actual vs. predicted correct responses",
+
+png(filename="D:/behavmodelfigs/mixedeffectsmodels/originalvspredicted_FAmodel_F2002.png")
+plot(as.numeric(unlist(macdata['falsealarm'])), macpred, main="Mac actual vs. predicted FA or not model",
      xlab="actual ", ylab="predicted ", pch=19)
-abline(a=0, b=1)
+dev.off()

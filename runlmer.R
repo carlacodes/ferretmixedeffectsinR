@@ -19,7 +19,7 @@ library(Hmisc)
 library(modelsummary)
 
 
-
+#modelling the correct rxn time response
 
 dfuse <- read.csv("dfuse.csv") 
 dfcatuse <- read.csv("dfcat_use.csv")
@@ -148,22 +148,32 @@ zolapred=predict(chosen_model, zoladata, type='response')
 tinapred=predict(chosen_model, tinadata, type='response')
 macpred=predict(chosen_model, macdata, type='response')
 
+png(filename="D:/behavmodelfigs/mixedeffectsmodels/originalvspredicted_correctreleasetimes_cruella.png")
 
-plot(as.numeric(unlist(oneferret['realRelReleaseTimes'])), cruellapred, main="Cruella actual vs. predicted lick release times",
+cruella_plot = plot(as.numeric(unlist(oneferret['realRelReleaseTimes'])), cruellapred, main="Cruella actual vs. predicted lick release times",
      xlab="actual ", ylab="predicted ", pch=19)
 abline(a=0, b=1)
+dev.off()
 
-plot(as.numeric(unlist(zoladata['realRelReleaseTimes'])), zolapred, main="Zola actual vs. predicted lick release times",
+png(filename="D:/behavmodelfigs/mixedeffectsmodels/originalvspredicted_correctreleasetimes_F1702.png")
+zola_plot_pred = plot(as.numeric(unlist(zoladata['realRelReleaseTimes'])), zolapred, main="Zola actual vs. predicted lick release times",
      xlab="actual ", ylab="predicted ", pch=19)
 abline(a=0, b=1)
+dev.off()
 
-plot(as.numeric(unlist(tinadata['realRelReleaseTimes'])), tinapred, main="Tina actual vs. predicted lick release times",
+
+png(filename="D:/behavmodelfigs/mixedeffectsmodels/originalvspredicted_correctreleasetimes_F1802.png")
+
+tina_plot_pred = plot(as.numeric(unlist(tinadata['realRelReleaseTimes'])), tinapred, main="Tina actual vs. predicted lick release times",
      xlab="actual ", ylab="predicted ", pch=19)
 abline(a=0, b=1)
+dev.off()
 
-plot(as.numeric(unlist(macdata['realRelReleaseTimes'])), macpred, main="Mac actual vs. predicted lick release times",
+png(filename="D:/behavmodelfigs/mixedeffectsmodels/originalvspredicted_correctreleasetimes_F2002.png")
+macraoni_plot_pred = plot(as.numeric(unlist(macdata['realRelReleaseTimes'])), macpred, main="Mac actual vs. predicted lick release times",
      xlab="actual ", ylab="predicted ", pch=19)
 abline(a=0, b=1)
+dev.off()
 
 
 
